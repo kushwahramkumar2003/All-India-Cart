@@ -1,14 +1,13 @@
-version: "3.8"
+version: "3.9"
+
 services:
   postgres:
-    image: postgres:10.3
-    restart: always
-    environment:
-      - POSTGRES_USER=ramkumar
-      - POSTGRES_PASSWORD=HacksRK
-    volumes:
-      - postgres:/var/lib/postgresql/data
+    image: postgres:14-alpine
     ports:
-      - "5432:5432"
-volumes:
-  postgres:
+      - 5432:5432
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=HacksRK
+      - POSTGRES_USER=ramkumar
+      - POSTGRES_DB=e-commerce
