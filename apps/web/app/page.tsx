@@ -7,6 +7,8 @@ import constants from "@/constants";
 import ImageScroller from "@/components/core/home/ImageScroller";
 import TodaySale from "@/components/core/home/TodaySale";
 import Categories from "@/components/core/home/Categories";
+import ThisMonth from "@/components/core/home/ThisMonth";
+import Promotion from "@/components/core/home/Promotion";
 
 export default function Index() {
   return (
@@ -14,6 +16,8 @@ export default function Index() {
       <ImageScroller images={constants.images.iphoneImgArr} />
       <TodaySale />
       <Categories />
+      <ThisMonth />
+      <Promotion />
     </div>
   );
 }

@@ -5,15 +5,17 @@ import { FaRegHeart } from "react-icons/fa";
 import Image from "next/image";
 import constants from "@/constants";
 
-const ProductCard = () => {
+const ProductCard = ({ off = false }: { off: boolean }) => {
   return (
     <div className={"flex flex-col gap-4"}>
-      <div className="flex flex-row items-start justify-center gap-4">
-        <Button
-          className={"bg-[#DB4444] text-white text-lg -mt-2 hover:bg-red-400"}
-        >
-          -40%
-        </Button>
+      <div className="flex flex-row items-start justify-center gap-4 bg-gray-100 rounded-sm p-2">
+        {off && (
+          <Button
+            className={"bg-[#DB4444] text-white text-lg -mt-2 hover:bg-red-400"}
+          >
+            -40%
+          </Button>
+        )}
 
         <Image
           src={constants.images.gamingController}

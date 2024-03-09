@@ -48,10 +48,10 @@ const TodaySale = () => {
         <span className={"w-6 h-[2px] bg-[#DB4444]"} />
       </div>
       <div className={"flex flex-row flex-wrap gap-20 mt-10"}>
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
+        <ProductCard off={true} />
+        <ProductCard off={true} />
+        <ProductCard off={true} />
+        <ProductCard off={true} />
       </div>
       <div className="flex flex-row justify-center items-center text-center mt-10">
         <Button className={"bg-[#DB4444] w-max hover:bg-red-400"}>
