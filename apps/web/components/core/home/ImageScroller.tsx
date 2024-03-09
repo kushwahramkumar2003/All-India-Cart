@@ -13,7 +13,11 @@ import {
 } from "@/components/ui/carousel";
 import Image, { StaticImageData } from "next/image";
 
-export function ImageScroller({ images }: StaticImageData[]) {
+interface ImageScrollerProps {
+  images: {}[];
+}
+
+export function ImageScroller({ images }: { images: StaticImageData[] }) {
   return (
     <Carousel
       className="w-full "
