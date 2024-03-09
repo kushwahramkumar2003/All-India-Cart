@@ -9,6 +9,7 @@ import TodaySale from "@/components/core/home/TodaySale";
 import Categories from "@/components/core/home/Categories";
 import ThisMonth from "@/components/core/home/ThisMonth";
 import Promotion from "@/components/core/home/Promotion";
+import OurProducts from "@/components/core/home/OurProducts";
 
 export default function Index() {
   return (
@@ -18,6 +19,7 @@ export default function Index() {
       <Categories />
       <ThisMonth />
       <Promotion />
+      <OurProducts />
     </div>
   );
 }
