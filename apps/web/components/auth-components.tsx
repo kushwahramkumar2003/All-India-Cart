@@ -11,6 +11,7 @@ export function SignIn({
         "use server"
         await signIn(provider)
       }}
+      className={"w-36"}
     >
       <Button {...props}>Sign In</Button>
     </form>
