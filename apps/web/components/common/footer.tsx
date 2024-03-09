@@ -1,4 +1,4 @@
-import CustomLink from "./custom-link";
+import CustomLink from "../reusable/custom-link";
 import { FooterData } from "@/data/footerData";
 
 export default function Footer() {

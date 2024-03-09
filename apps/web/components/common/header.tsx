@@ -1,5 +1,5 @@
-import { MainNav } from "./main-nav"
-import UserButton from "./user-button"
+import { MainNav } from "../main-nav";
+import UserButton from "../user-button";
 
 export default function Header() {
   return (
@@ -9,5 +9,5 @@ export default function Header() {
         <UserButton />
       </div>
     </header>
-  )
+  );
 }
