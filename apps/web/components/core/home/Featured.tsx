@@ -19,25 +19,45 @@ const Featured = () => {
           </div>
         </div>
       </div>
-      <div className={"flex flex-row gap-4"} >
-        <div className="bg-black">
-          <Image src={constants.images.playstation} alt="playstation" />
-          <div>
-            <p>PlayStation 5</p>
-            <p>Black and White version of the PS5 coming out on sale.</p>
-            <CustomLink href="/">Shop Now</CustomLink>
+      <div className={"flex flex-row gap-4"}>
+        <div className="bg-black relative flex justify-center items-center">
+          <Image src={constants.images.playstation} alt="playstation" className={"w-full object-cover"} />
+          <div className="absolute text-white -mt-0 bottom-0 left-0 right-0 z-10 gap-4 flex flex-col max-w-72 pl-10 mb-6">
+            <p className={"text-3xl font-semibold"}>PlayStation 5</p>
+            <p className={"text-sm"}>Black and White version of the PS5 coming out on sale.</p>
+            <CustomLink href="/" className={"text-lg font-semibold underline"}>Shop Now</CustomLink>
           </div>
         </div>
         <div className="flex flex-col gap-5">
-          <div className="bg-black">
-            <Image src={constants.images.capwoman} alt="capwoman" />
-          </div>
-          <div className="flex flex-row justify-between ">
-            <div className="bg-black">
-              <Image src={constants.images.soundbox} alt="headphone" />
+          <div className="bg-black flex flex-row relative flex-grow w-auto">
+            <Image src={constants.images.capwoman} alt="capwoman" className={"border border-red-700 "}/>
+            <div className={"flex flex-col gap-4 px-4 text-white absolute bottom-0 left-0 right-0 max-w-72 mb-6 z-10"}>
+              <p className={"text-3xl font-semibold"}>Women’s Collections</p>
+              <p className={"text-md"}>Featured woman collections that give you another vibe.</p>
+              <CustomLink href="/" className={"text-lg font-semibold underline"}>Shop Now</CustomLink>
             </div>
-            <div className="bg-black">
-              <Image src={constants.images.perfume} alt="shoe" />
+
+
+          </div>
+          <div className="flex flex-row justify-between gap-4">
+            <div className="bg-black relative p-4 flex justify-center items-center
+            ">
+              <Image src={constants.images.soundbox} alt="headphone"/>
+              <div
+                  className={"flex flex-col gap-1 px-4 text-white absolute bottom-0 left-0 right-0 max-w-72 mb-6 z-10"}>
+                <p className={"text-2xl font-semibold"}>Speakers</p>
+                <p className={"text-sm"}>Amazon wireless speakers</p>
+                <CustomLink href="/" className={"text-lg font-semibold underline"}>Shop Now</CustomLink>
+              </div>
+            </div>
+            <div className="bg-black relative p-4 flex justify-center items-center">
+              <Image src={constants.images.perfume} alt="shoe"/>
+              <div
+                  className={"flex flex-col gap-1 px-4 text-white absolute bottom-0 left-0 right-0 max-w-72 mb-6 z-10"}>
+                <p className={"text-2xl font-semibold"}>Perfume</p>
+                <p className={"text-sm"}>GUCCI INTENSE OUD EDP</p>
+                <CustomLink href="/" className={"text-lg font-semibold underline"}>Shop Now</CustomLink>
+              </div>
             </div>
           </div>
         </div>
