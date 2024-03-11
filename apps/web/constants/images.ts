@@ -6,6 +6,10 @@ import iphone2 from "@/assets/iphone2.jpeg";
 import iphone3 from "@/assets/iphone3.jpeg";
 import gamingController from "@/assets/gaming-controller.svg";
 import speaker from "@/assets/jbl speaker.svg";
+import playstation from "@/assets/playstation.svg";
+import capwoman from "@/assets/capwoman.png";
+import soundbox from "@/assets/soundbox.svg";
+import perfume from "@/assets/perfume.png";
 export const images = {
   qrcodeImg: qrcodeImg,
   playStoreImg,
@@ -13,6 +17,10 @@ export const images = {
   iphoneImgArr: [iphone1, iphone2, iphone3],
   gamingController,
   speaker,
+  playstation,
+  capwoman,
+  soundbox,
+  perfume,
 };
 
 export default images;

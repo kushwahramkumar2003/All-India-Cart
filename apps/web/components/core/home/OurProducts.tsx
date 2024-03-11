@@ -26,7 +26,7 @@ const OurProducts = () => {
         <ProductCard newProduct={true} />
         <ProductCard newProduct={true} />
       </div>
-      <div className="flex flex-row justify-center items-center text-center mt-10">
+      <div className="flex flex-row items-center justify-center mt-10 text-center">
         <Button className={"bg-[#DB4444] w-max hover:bg-red-400"}>
           View All Products
         </Button>
