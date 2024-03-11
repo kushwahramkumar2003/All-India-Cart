@@ -50,7 +50,8 @@ const Categories = () => {
           <span className={"text-center items-center flex"}>{"<-  ->"}</span>
         </div>
       </div>
-      <div className={"flex flex-row flex-wrap text-black gap-5"}>
+      {/*<div className={"flex flex-row flex-wrap text-black gap-5"}>*/}
+      <div className={"grid md:grid-cols-6 gap-5 sm:grid-cols-2 xmd:grid-cols-3"}>
         {categories.map((item) => {
           return (
             <div
