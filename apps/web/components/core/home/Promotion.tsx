@@ -24,7 +24,7 @@ const Promotion = () => {
   return (
     <div
       className={
-        "bg-black p-10 flex flex-row md:flex-nowrap sm:flex-wrap sm:flex-col md:flex-row"
+        "bg-black p-10 flex flex-row md:flex-nowrap sm:flex-wrap sm:flex-col md:flex-row flex-wrap "
       }
     >
       <div className={"flex flex-col gap-4"}>
@@ -48,7 +48,7 @@ const Promotion = () => {
           Buy Now!
         </Button>
       </div>
-      <div className={""}>
+      <div className={"max-sm:mt-6"}>
         <Image src={constants.images.speaker} alt={"speaker img"} />
       </div>
     </div>

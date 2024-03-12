@@ -11,6 +11,7 @@ import ThisMonth from "@/components/core/home/ThisMonth";
 import Promotion from "@/components/core/home/Promotion";
 import OurProducts from "@/components/core/home/OurProducts";
 import Featured from "@/components/core/home/Featured";
+import Promise from "@/components/core/home/Promise";
 
 export default function Index() {
   return (
@@ -22,6 +23,7 @@ export default function Index() {
       <Promotion />
       <OurProducts />
       <Featured />
+        <Promise/>
     </div>
   );
 }
