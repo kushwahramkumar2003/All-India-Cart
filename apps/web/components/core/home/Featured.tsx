@@ -1,3 +1,4 @@
+// "use client"
 import CustomLink from "@/components/reusable/custom-link";
 import constants from "@/constants";
 import Image from "next/image";

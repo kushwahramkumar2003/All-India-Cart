@@ -1,3 +1,4 @@
+// "use client"
 import { SlScreenSmartphone } from "react-icons/sl";
 import { HiOutlineComputerDesktop } from "react-icons/hi2";
 import { BsSmartwatch } from "react-icons/bs";
@@ -54,7 +55,7 @@ const Categories = () => {
       <div className={"grid md:grid-cols-6 gap-5 sm:grid-cols-2 xmd:grid-cols-3"}>
         {categories.map((item) => {
           return (
-            <div
+            <div key={item.name}
               className={
                 "flex flex-col justify-center items-center text-center border rounded-sm border-black gap-1 p-4 hover:cursor-pointer hover:bg-[#DB4444] transition-all duration-300 hover:text-white shadow shadow-slate-600"
               }

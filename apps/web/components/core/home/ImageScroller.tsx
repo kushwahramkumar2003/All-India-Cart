@@ -34,7 +34,7 @@ export function ImageScroller({ images }: { images: StaticImageData[] }) {
               src={img}
               alt={`Image ${i + 1}`}
               className="w-full h-auto object-cover"
-              layout="responsive"
+              // layout="responsive"
               width={300}
               height={300}
             />

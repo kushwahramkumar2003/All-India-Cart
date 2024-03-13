@@ -1,3 +1,4 @@
+// "use client"
 import ProductCard from "@/components/common/ProductCard";
 import { Button } from "@/components/ui/button";
 
