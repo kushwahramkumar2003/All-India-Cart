@@ -1,3 +1,4 @@
+// "use client"
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import constants from "@/constants";
@@ -34,7 +35,7 @@ const Promotion = () => {
         </p>
         <div className={"flex flex-row flex-grow gap-4 flex-wrap"}>
           {TimeBallData.map((TimeBallDatum) => (
-            <div
+            <div key={TimeBallDatum.value}
               className={
                 "flex flex-col rounded-full bg-white text-black justify-center items-center text-center p-2 w-16 h-16 gap-0"
               }

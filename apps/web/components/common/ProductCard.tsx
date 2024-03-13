@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 import { Button } from "@/components/ui/button";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { FaRegHeart } from "react-icons/fa";
@@ -42,7 +42,7 @@ const ProductCard = ({ off = false, newProduct = false,Delete = false,star=false
         <Image
           src={constants.images.gamingController}
           alt={"alt img"}
-          layout="responsive"
+          // layout="responsive"
           className="w-64 h-64 mt-8"
         />
         { Delete && <RiDeleteBin6Line className={
