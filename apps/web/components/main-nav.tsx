@@ -71,18 +71,22 @@ export function MainNav() {
 }
 
 function ResponsiveNav():React.JSX.Element{
+    const [open, setOpen] = useState(false);
+
   return (
       <div className={"sm:hidden"}>
 
 
-      <Sheet >
+      <Sheet onOpenChange={setOpen} open={open}>
           <SheetTrigger ><RxHamburgerMenu size={30}/></SheetTrigger>
-          <SheetContent side={"left"}>
-              <div className="flex gap-6 flex-col items-center justify-center">
+          <SheetContent side={"left"} >
+              <div className="flex gap-6 flex-col items-center justify-center mt-6">
                   <Input placeholder={"Search something ?"}/>
                   {links.map((link): ReactNode => {
                       return (
-                          <Link href={link.href} key={link.href}>
+                          <Link href={link.href} key={link.href}  onClick={()=>{
+                              setOpen(false)
+                          }}>
                               {link.title}
                           </Link>
                       );
