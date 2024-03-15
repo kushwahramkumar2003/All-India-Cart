@@ -11,7 +11,7 @@ const notFoundBreadCrumbsData = [
     {
         name:"404",
         link:"/404"
-        
+
     }
 ]
 export default function NotFound() {
