@@ -10,6 +10,10 @@ import playstation from "@/assets/playstation.svg";
 import capwoman from "@/assets/capwoman.png";
 import soundbox from "@/assets/soundbox.svg";
 import perfume from "@/assets/perfume.png";
+import twoAffGirls from "@/assets/portrait-two-african-females-holding-shopping-bags-while-reacting-something-their-smartphone 1.png"
+import toCruise from "@/assets/Tom Cruise.png"
+import emmaWatson from "@/assets/Emma Watson.png"
+import willSmith from "@/assets/Will Smith.png"
 export const images = {
   qrcodeImg: qrcodeImg,
   playStoreImg,
@@ -21,6 +25,11 @@ export const images = {
   capwoman,
   soundbox,
   perfume,
+  twoAffGirls,
+  toCruise,
+  emmaWatson,
+  willSmith
+
 };
 
 export default images;
