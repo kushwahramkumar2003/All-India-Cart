@@ -14,6 +14,8 @@ import twoAffGirls from "@/assets/portrait-two-african-females-holding-shopping-
 import toCruise from "@/assets/Tom Cruise.png"
 import emmaWatson from "@/assets/Emma Watson.png"
 import willSmith from "@/assets/Will Smith.png"
+import monitor from "@/assets/monitor.png"
+import cartController from "@/assets/cart controller.png"
 export const images = {
   qrcodeImg: qrcodeImg,
   playStoreImg,
@@ -28,7 +30,9 @@ export const images = {
   twoAffGirls,
   toCruise,
   emmaWatson,
-  willSmith
+  willSmith,
+  monitor,
+  cartController
 
 };
 
