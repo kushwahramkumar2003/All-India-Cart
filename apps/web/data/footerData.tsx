@@ -73,7 +73,7 @@ export const FooterData: FooterSection[] = [
       {
         name: "My Account",
         type: "link",
-        to: "/account",
+        to: "/useraccount",
       },
       {
         name: "Login / Register",
