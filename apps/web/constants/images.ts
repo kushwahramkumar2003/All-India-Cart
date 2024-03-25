@@ -10,12 +10,18 @@ import playstation from "@/assets/playstation.svg";
 import capwoman from "@/assets/capwoman.png";
 import soundbox from "@/assets/soundbox.svg";
 import perfume from "@/assets/perfume.png";
-import twoAffGirls from "@/assets/portrait-two-african-females-holding-shopping-bags-while-reacting-something-their-smartphone 1.png"
-import toCruise from "@/assets/Tom Cruise.png"
-import emmaWatson from "@/assets/Emma Watson.png"
-import willSmith from "@/assets/Will Smith.png"
-import monitor from "@/assets/monitor.png"
-import cartController from "@/assets/cart controller.png"
+import twoAffGirls from "@/assets/portrait-two-african-females-holding-shopping-bags-while-reacting-something-their-smartphone 1.png";
+import toCruise from "@/assets/Tom Cruise.png";
+import emmaWatson from "@/assets/Emma Watson.png";
+import willSmith from "@/assets/Will Smith.png";
+import monitor from "@/assets/monitor.png";
+import cartController from "@/assets/cart controller.png";
+import controllerImg1 from "@/assets/image 57.png";
+import controllerImg2 from "@/assets/image 55.png";
+import controllerImg3 from "@/assets/image 61.png";
+import controllerImg4 from "@/assets/image 59.png";
+import mainControllerImg from "@/assets/image 63.png";
+
 export const images = {
   qrcodeImg: qrcodeImg,
   playStoreImg,
@@ -32,8 +38,14 @@ export const images = {
   emmaWatson,
   willSmith,
   monitor,
-  cartController
-
+  cartController,
+  controllerArr: [
+    controllerImg1,
+    controllerImg2,
+    controllerImg3,
+    controllerImg4,
+  ],
+  mainControllerImg,
 };
 
 export default images;
