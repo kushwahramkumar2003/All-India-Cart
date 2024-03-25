@@ -47,7 +47,7 @@ const Featured = () => {
             <Image
               src={constants.images.capwoman}
               alt="capwoman"
-              className={"border border-red-700 "}
+              className={" "}
             />
             <div
               className={

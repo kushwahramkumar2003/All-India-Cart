@@ -1,18 +1,19 @@
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
-import { Button } from "./ui/button"
-import { auth } from "auth"
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Button } from "./ui/button";
+import { auth } from "auth";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu"
-import { SignIn, SignOut } from "./auth-components"
+} from "./ui/dropdown-menu";
+import { SignIn, SignOut } from "./auth-components";
+import Link from "next/link";
 
 export default async function UserButton() {
-  const session = await auth()
-  if (!session?.user) return <SignIn />
+  const session = await auth();
+  if (!session?.user) return <SignIn />;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -39,10 +40,18 @@ export default async function UserButton() {
             </p>
           </div>
         </DropdownMenuLabel>
+        <DropdownMenuItem className={"flex justify-center items-center"}>
+          <Link
+            href={"/account/profile"}
+            className={"flex justify-center items-center text-center"}
+          >
+            Account
+          </Link>
+        </DropdownMenuItem>{" "}
         <DropdownMenuItem>
           <SignOut />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
