@@ -10,7 +10,7 @@ datasource db {
 }
 
 model Customer {
-  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  id                String         @id @default(auto()) @map("_id") @db.ObjectId
   firstName         String
   lastName          String
   class             String
@@ -22,32 +22,33 @@ model Customer {
   voiceMail         String
   password          String
   creditCard        String
-  creditCardType    CreditCardType   @relation(fields: [creditCardTypeID], references: [id], map: "customer_creditCardType")
-  cardExpiration    CardExpiration @relation(fields: [cardExpirationID], references: [id], map: "customer_cardExpiration")
-  // billingAddress   Address   @relation("billingAddress",fields: [billingAddressId], references: [id], map: "customer_billingAddress")
-  // shippingAddress  Address   @relation( "shippingAddress",fields: [shippingAddressId], references: [id], map: "customer_shippingAddress")
+  creditCardType    CreditCardType @relation(fields: [creditCardTypeID], references: [id])
+  cardExpiration    CardExpiration @relation(fields: [cardExpirationID], references: [id])
+  // billingAddress   Address   @relation("billingAddress",fields: [billingAddressId], references: [id])
+  // shippingAddress  Address   @relation( "shippingAddress",fields: [shippingAddressId], references: [id])
   dateEntered       DateTime
   dateUpdated       DateTime
   active            Boolean
   deleted           Boolean
   notes             String?
-  creditCardTypeID  String    @db.ObjectId
-  cardExpirationID  String    @db.ObjectId
-  // billingAddressId  String @db.ObjectId
-  // shippingAddressId String @db.ObjectId
+  creditCardTypeID  String         @db.ObjectId
+  cardExpirationID  String         @db.ObjectId
+  billingAddressId  String         @db.ObjectId
+  shippingAddressId String         @db.ObjectId
+  Order             Order[]
 }
 
 model Address {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  customer   Customer  @relation(fields: [customerId], references: [id])
-  customerId String    @db.ObjectId
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  customer   Customer    @relation(fields: [customerId], references: [id])
+  customerId String      @db.ObjectId
   street     String
   city       String
   state      String
   postalCode String
   country    String
   type       AddressType @relation(fields: [typeId], references: [id])
-  typeId     String    @db.ObjectId
+  typeId     String      @db.ObjectId
 }
 
 model AddressType {
@@ -57,20 +58,20 @@ model AddressType {
 }
 
 model CreditCardType {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   customers Customer[]
 }
 
 model CardExpiration {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
   month     Int
   year      Int
   customers Customer[]
 }
 
 model Category {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String
   picture     String
@@ -79,31 +80,31 @@ model Category {
 }
 
 model Shipper {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
   companyName String
   phone       String
   orders      Order[]
 }
 
 model Payment {
-  id      String    @id @default(auto()) @map("_id") @db.ObjectId
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
   type    String
   allowed Boolean
   orders  Order[]
 }
 
 model Order {
-  id             String    @id @default(auto()) @map("_id") @db.ObjectId
-  customer       Customer  @relation(fields: [customerId], references: [id])
-  customerId     String    @db.ObjectId
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  customer       Customer      @relation(fields: [customerId], references: [id])
+  customerId     String        @db.ObjectId
   orderNumber    Int
-  payment        Payment   @relation(fields: [paymentId], references: [id])
-  paymentId      String    @db.ObjectId
+  payment        Payment       @relation(fields: [paymentId], references: [id])
+  paymentId      String        @db.ObjectId
   orderDate      DateTime
   shipDate       DateTime
   requiredDate   DateTime
-  shipper        Shipper   @relation(fields: [shipperId], references: [id])
-  shipperId      String    @db.ObjectId
+  shipper        Shipper       @relation(fields: [shipperId], references: [id])
+  shipperId      String        @db.ObjectId
   freight        String
   salesTax       Int
   timestamp      DateTime
@@ -118,11 +119,11 @@ model Order {
 }
 
 model OrderDetail {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   order     Order    @relation(fields: [orderId], references: [id])
-  orderId   String @db.ObjectId
-  // product   Product  @relation(fields: [productId], references: [id])
-  productId Int
+  orderId   String   @db.ObjectId
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String   @db.ObjectId
   price     Int
   quantity  Int
   discount  Int
@@ -133,15 +134,15 @@ model OrderDetail {
 }
 
 model Product {
-  id               String @id @default(auto()) @map("_id") @db.ObjectId
+  id                String        @id @default(auto()) @map("_id") @db.ObjectId
   sku               String
   vendorProductId   String
   name              String
   description       String
-  // supplier          Supplier @relation(fields: [supplierId], references: [id])
-  supplierId        Int
-  category          Category @relation(fields: [categoryId], references: [id])
-  categoryId        String @db.ObjectId
+  supplier          Supplier      @relation(fields: [supplierId], references: [id])
+  supplierId        String        @db.ObjectId
+  category          Category      @relation(fields: [categoryId], references: [id])
+  categoryId        String        @db.ObjectId
   quantityPerUnit   Int
   unitPrice         Int
   msrp              Int
@@ -160,10 +161,11 @@ model Product {
   picture           String
   ranking           Float
   notes             String?
+  OrderDetail       OrderDetail[]
 }
 
 model Supplier {
-  id                String @id @default(auto()) @map("_id") @db.ObjectId
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
   companyName       String
   contactName       String
   contactTitle      String
@@ -189,4 +191,5 @@ model Supplier {
   deleted           Boolean
   dateCreated       DateTime
   dateUpdated       DateTime
+  Product           Product[]
 }
