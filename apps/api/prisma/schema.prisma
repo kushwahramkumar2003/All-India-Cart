@@ -18,7 +18,7 @@ model Customer {
   building          String
   addresses         Address[]
   phone             String
-  email             String
+  email             String         @unique
   voiceMail         String
   password          String
   creditCard        String
@@ -168,28 +168,29 @@ model Supplier {
   id                String    @id @default(auto()) @map("_id") @db.ObjectId
   companyName       String
   contactName       String
-  contactTitle      String
-  address           String
-  city              String
-  region            String
-  postalCode        String
-  country           String
+  contactTitle      String?
+  address           String?
+  city              String?
+  region            String?
+  postalCode        String?
+  country           String?
   phone             String
-  fax               String
-  homePage          String
-  email             String
-  url               String
-  paymentMethod     String
-  discountType      String
-  typeGoods         String
-  discountAvailable Int
-  currentOrder      Int
-  picture           String
-  ranking           Float
+  fax               String?
+  homePage          String?
+  email             String    @unique
+  password          String
+  url               String?
+  paymentMethod     String?
+  discountType      String?
+  typeGoods         String?
+  discountAvailable Int?
+  currentOrder      Int?
+  picture           String?
+  ranking           Float?
   notes             String?
-  active            Boolean
-  deleted           Boolean
-  dateCreated       DateTime
-  dateUpdated       DateTime
+  active            Boolean? @default(false)
+  deleted           Boolean?
+  dateCreated       DateTime  @default(now())
+  dateUpdated       DateTime  @updatedAt
   Product           Product[]
 }

@@ -34,3 +34,8 @@ export const SignUpSupplierSchema = z.object({
   password: z.string(),
   email: z.string()
 })
+
+export const SupplierLoginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8)
+})
