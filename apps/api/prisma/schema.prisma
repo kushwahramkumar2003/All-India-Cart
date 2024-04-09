@@ -74,8 +74,8 @@ model Category {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String
-  picture     String
-  active      Boolean
+  picture     String?
+  active      Boolean @default(true)
   products    Product[]
 }
 
@@ -136,7 +136,7 @@ model OrderDetail {
 model Product {
   id                String        @id @default(auto()) @map("_id") @db.ObjectId
   sku               String
-  vendorProductId   String
+  // vendorProductId   String
   name              String
   description       String
   supplier          Supplier      @relation(fields: [supplierId], references: [id])
@@ -146,10 +146,10 @@ model Product {
   quantityPerUnit   Int
   unitPrice         Int
   msrp              Int
-  availableSize     Int
-  availableColors   Int
-  size              Int
-  color             Int
+  availableSize     String[]
+  availableColors   String[]
+  size              String
+  color             String
   discount          Int
   unitWeight        Int
   unitInStock       Boolean
@@ -157,9 +157,11 @@ model Product {
   reorderLevel      Int
   productAvailable  Boolean
   discountAvailable Int
-  currentOrder      Int
-  picture           String
-  ranking           Float
+  currentOrder      Int?
+  picture           String[]
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime     @updatedAt
+  ranking           Float?
   notes             String?
   OrderDetail       OrderDetail[]
 }
