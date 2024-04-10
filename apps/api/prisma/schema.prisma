@@ -75,7 +75,7 @@ model Category {
   name        String
   description String
   picture     String?
-  active      Boolean @default(true)
+  active      Boolean   @default(true)
   products    Product[]
 }
 
@@ -159,8 +159,8 @@ model Product {
   discountAvailable Int
   currentOrder      Int?
   picture           String[]
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime     @updatedAt
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
   ranking           Float?
   notes             String?
   OrderDetail       OrderDetail[]
@@ -190,9 +190,16 @@ model Supplier {
   picture           String?
   ranking           Float?
   notes             String?
-  active            Boolean? @default(false)
+  active            Boolean?  @default(false)
   deleted           Boolean?
   dateCreated       DateTime  @default(now())
   dateUpdated       DateTime  @updatedAt
   Product           Product[]
+}
+
+model Coupon {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  code     String
+  discount Int
+  active   Boolean @default(true)
 }
