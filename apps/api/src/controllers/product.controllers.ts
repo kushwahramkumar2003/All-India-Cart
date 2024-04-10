@@ -62,7 +62,7 @@ export const createNewProduct = asyncHandler(async (req: Request, res: Response)
   })
 
   if (!product) {
-    throw new Error('Error in creatingi new Product.')
+    throw new Error('Error in creating new Product.')
   }
 
   res.status(200).json({
@@ -158,5 +158,39 @@ export const deleteProduct = asyncHandler(async (req: Request, res: Response) =>
 
   res.status(200).json({
     message: 'Product deleted Successfully!!'
+  })
+})
+
+export const getAllProducts = asyncHandler(async (req: Request, res: Response) => {
+  //@ts-ignore
+  const user = req.user as Supplier
+  const products = await prisma.product.findMany({
+    where: {
+      supplierId: user.id
+    }
+  })
+  res.status(200).json({
+    message: 'Products fetched Successfully!!',
+    products
+  })
+})
+
+export const getProductById = asyncHandler(async (req: Request, res: Response) => {
+  const productId = req.params.id
+  if (!productId) {
+    throw new Error('Please give product Id')
+  }
+  const product = await prisma.product.findUnique({
+    where: {
+      id: productId
+    }
+  })
+  if (!product) {
+    throw new Error('Product not found!!')
+  }
+
+  res.json({
+    message: 'Product fetched successfully',
+    product: product
   })
 })
