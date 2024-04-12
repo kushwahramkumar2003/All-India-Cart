@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import asyncHandler from '../utils/asyncHandler'
-import { SignUpSupplierSchema, SupplierLoginSchema } from '../../types/supplier'
+import { SignUpSupplierSchema, SupplierLoginSchema } from '../types/supplier'
 import { prisma } from '../utils/prisma'
 import bcrypt from 'bcrypt'
 import getNewToken from '../utils/jwtToken'
@@ -60,7 +60,7 @@ export const sellerRegester = asyncHandler(async (req: Request, res: Response) =
  * @apiGroup Auth
  * @apiDescription Login a user
  ****************************************/
-export const login = asyncHandler(async (req: Request, res: Response) => {
+export const sellerLogin = asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = SupplierLoginSchema.parse(req.body)
 
   const user = await prisma.supplier.findUnique({ where: { email } })
