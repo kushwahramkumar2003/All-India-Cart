@@ -1,6 +1,6 @@
 import asyncHandler from '../utils/asyncHandler'
 import { Request, Response } from 'express'
-import { CouponSchema } from '../../types/coupon'
+import { CouponSchema } from '../types/coupon'
 import { prisma } from '../utils/prisma'
 import z from 'zod'
 

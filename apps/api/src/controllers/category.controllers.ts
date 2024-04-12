@@ -1,17 +1,19 @@
 import { Request, Response } from 'express'
 import asyncHandler from '../utils/asyncHandler'
-import { CategorySchema } from '../../types/caegory'
+import { CategorySchema } from '../types/caegory'
 import { prisma } from '../utils/prisma'
 import { azureUpload } from '../services/azure'
+import * as fs from 'fs'
 
 export const createCategory = asyncHandler(async (req: Request, res: Response) => {
-  const { name, description } = CategorySchema.parse(req.body)
+  const { name, description } = req.body
 
-  const icon = req.file as Express.Multer.File
+  //@ts-ignore
+  const icon = req.files ? (req.files[0] as Express.Multer.File) : null
 
   let iconUrl: string | null = null
 
-  if (!icon) {
+  if (icon) {
     iconUrl = await azureUpload(icon)
   }
 

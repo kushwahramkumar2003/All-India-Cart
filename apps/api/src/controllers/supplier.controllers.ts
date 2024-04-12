@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
 import asyncHandler from '../utils/asyncHandler'
-import { SupplierSchema } from '../../types/supplier'
+import { SupplierSchema, SupplierUpdateSchema } from '../types/supplier'
 import { prisma } from '../utils/prisma'
 import { azureUpload } from '../services/azure'
 
-const UpdateSupplierDetails = asyncHandler(async (req: Request, res: Response) => {
+export const updateSupplierDetails = asyncHandler(async (req: Request, res: Response) => {
   const {
     companyName,
     contactName,
@@ -23,20 +23,8 @@ const UpdateSupplierDetails = asyncHandler(async (req: Request, res: Response) =
     discountType,
     typeGoods,
     discountAvailable,
-
     notes
-  } = SupplierSchema.parse(req.body)
-
-  const avatar = req.file
-
-  let picture
-
-  if (avatar) {
-    picture = await azureUpload(avatar)
-    if (!picture) {
-      throw new Error('Error uploading avatar')
-    }
-  }
+  } = SupplierUpdateSchema.parse(req.body)
 
   const supplier = await prisma.supplier.findFirst({
     where: {
@@ -48,6 +36,23 @@ const UpdateSupplierDetails = asyncHandler(async (req: Request, res: Response) =
     throw new Error('Supplier not found')
   }
 
+  const discount = Number.parseInt(discountAvailable)
+
+  //@ts-ignore
+  const avatar = req.files ? (req.files[0] as Express.Multer.File) : null
+
+  console.log('avatar ', avatar)
+
+  let picture
+
+  if (avatar) {
+    picture = await azureUpload(avatar)
+
+    if (!picture) {
+      throw new Error('Error uploading avatar')
+    }
+  }
+  console.log('picture ', picture)
   const updatedSupplier = await prisma.supplier.update({
     where: {
       id: supplier.id
@@ -68,9 +73,9 @@ const UpdateSupplierDetails = asyncHandler(async (req: Request, res: Response) =
       paymentMethod: paymentMethod || supplier.paymentMethod,
       discountType: discountType || supplier.discountType,
       typeGoods: typeGoods || supplier.typeGoods,
-      discountAvailable: discountAvailable || supplier.discountAvailable,
+      discountAvailable: discount || supplier.discountAvailable,
       notes: notes || supplier.notes,
-      picture: picture || supplier.picture ? supplier.picture : null
+      picture: picture || supplier.picture
     }
   })
 
