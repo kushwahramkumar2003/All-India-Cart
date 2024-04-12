@@ -17,9 +17,9 @@ async function uploadToBlobStorage(containerName: string, blobName: string, buff
 }
 
 //@ts-ignore
-export const azureUpload = async (file) => {
+export const azureUpload = async (file: Express.Multer.File) => {
   if (!file) throw new Error('No file uploaded.')
-
+  // console.log('file ', file)
   const buffer = file.buffer
   const fileName = `${uuidv4()}_${file.originalname}`
   const containerName = 'photosandvideos' // Replace with your container name
@@ -46,5 +46,26 @@ export const azureDelete = async (blobName: string) => {
   } catch (error) {
     //@ts-ignore
     throw new Error(`Error deleting blob: ${error.message}`)
+  }
+}
+
+export const imageArrUploader = async (files: Express.Multer.File[]) => {
+  try {
+    const uploadPromises = files.map(async (file, index) => {
+      // Upload each file to Azure Blob Storage
+      const publicUrl = await azureUpload(file)
+      return { index, publicUrl }
+    })
+
+    const uploadedFiles = await Promise.all(uploadPromises)
+
+    // Now you have an array of objects containing index and publicUrl of each uploaded file
+    // You can use this array as needed, for example, to store the URLs in your database
+    console.log(uploadedFiles)
+
+    return uploadedFiles.map((item) => item.publicUrl)
+  } catch (error) {
+    console.error('Error uploading images to Azure Blob Storage:', error)
+    throw error
   }
 }

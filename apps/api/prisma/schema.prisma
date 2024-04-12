@@ -18,7 +18,7 @@ model Customer {
   building          String
   addresses         Address[]
   phone             String
-  email             String
+  email             String         @unique
   voiceMail         String
   password          String
   creditCard        String
@@ -74,8 +74,8 @@ model Category {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String
-  picture     String
-  active      Boolean
+  picture     String?
+  active      Boolean   @default(true)
   products    Product[]
 }
 
@@ -136,7 +136,7 @@ model OrderDetail {
 model Product {
   id                String        @id @default(auto()) @map("_id") @db.ObjectId
   sku               String
-  vendorProductId   String
+  // vendorProductId   String
   name              String
   description       String
   supplier          Supplier      @relation(fields: [supplierId], references: [id])
@@ -146,10 +146,10 @@ model Product {
   quantityPerUnit   Int
   unitPrice         Int
   msrp              Int
-  availableSize     Int
-  availableColors   Int
-  size              Int
-  color             Int
+  availableSize     String[]
+  availableColors   String[]
+  size              String
+  color             String
   discount          Int
   unitWeight        Int
   unitInStock       Boolean
@@ -157,9 +157,11 @@ model Product {
   reorderLevel      Int
   productAvailable  Boolean
   discountAvailable Int
-  currentOrder      Int
-  picture           String
-  ranking           Float
+  currentOrder      Int?
+  picture           String[]
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  ranking           Float?
   notes             String?
   OrderDetail       OrderDetail[]
 }
@@ -168,28 +170,36 @@ model Supplier {
   id                String    @id @default(auto()) @map("_id") @db.ObjectId
   companyName       String
   contactName       String
-  contactTitle      String
-  address           String
-  city              String
-  region            String
-  postalCode        String
-  country           String
+  contactTitle      String?
+  address           String?
+  city              String?
+  region            String?
+  postalCode        String?
+  country           String?
   phone             String
-  fax               String
-  homePage          String
-  email             String
-  url               String
-  paymentMethod     String
-  discountType      String
-  typeGoods         String
-  discountAvailable Int
-  currentOrder      Int
-  picture           String
-  ranking           Float
+  fax               String?
+  homePage          String?
+  email             String    @unique
+  password          String
+  url               String?
+  paymentMethod     String?
+  discountType      String?
+  typeGoods         String?
+  discountAvailable Int?
+  currentOrder      Int?
+  picture           String?
+  ranking           Float?
   notes             String?
-  active            Boolean
-  deleted           Boolean
-  dateCreated       DateTime
-  dateUpdated       DateTime
+  active            Boolean?  @default(false)
+  deleted           Boolean?
+  dateCreated       DateTime  @default(now())
+  dateUpdated       DateTime  @updatedAt
   Product           Product[]
+}
+
+model Coupon {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  code     String
+  discount Int
+  active   Boolean @default(true)
 }
