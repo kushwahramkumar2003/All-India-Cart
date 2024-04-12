@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
 import asyncHandler from '../utils/asyncHandler'
-import { CategorySchema } from '../../types/caegory'
+import { CategorySchema } from '../types/caegory'
 import { prisma } from '../utils/prisma'
 import { azureUpload, imageArrUploader } from '../services/azure'
-import { ProductSchema } from '../../types/product'
+import { ProductSchema } from '../types/product'
 import { Supplier } from '@prisma/client'
 
 export const createNewProduct = asyncHandler(async (req: Request, res: Response) => {
@@ -28,9 +28,9 @@ export const createNewProduct = asyncHandler(async (req: Request, res: Response)
     productAvailable
   } = ProductSchema.parse(req.body)
 
-  const files = req.files as Express.Multer.File[] // Extract uploaded files
+  // const files = req.files as Express.Multer.File[]
 
-  const productImages = await imageArrUploader(files)
+  // const productImages = await imageArrUploader(files)
 
   //@ts-ignore
 
@@ -56,7 +56,7 @@ export const createNewProduct = asyncHandler(async (req: Request, res: Response)
       reorderLevel,
       productAvailable,
       discountAvailable,
-      picture: productImages,
+      // picture: productImages,
       supplierId: supplier.id
     }
   })
@@ -94,12 +94,14 @@ export const updateProductDetails = asyncHandler(async (req: Request, res: Respo
     productAvailable
   } = ProductSchema.parse(req.body)
 
+  const productId = req.params.productId
+
   //@ts-ignore
   const user = req.user as Supplier
 
   const product = await prisma.product.findFirst({
     where: {
-      id: id
+      id: productId
     }
   })
 
@@ -161,12 +163,15 @@ export const deleteProduct = asyncHandler(async (req: Request, res: Response) =>
   })
 })
 
-export const getAllProducts = asyncHandler(async (req: Request, res: Response) => {
+export const getAllSupplierProducts = asyncHandler(async (req: Request, res: Response) => {
   //@ts-ignore
   const user = req.user as Supplier
   const products = await prisma.product.findMany({
     where: {
       supplierId: user.id
+    },
+    include: {
+      category: true
     }
   })
   res.status(200).json({
@@ -176,13 +181,28 @@ export const getAllProducts = asyncHandler(async (req: Request, res: Response) =
 })
 
 export const getProductById = asyncHandler(async (req: Request, res: Response) => {
-  const productId = req.params.id
+  const productId = req.params.productId
   if (!productId) {
     throw new Error('Please give product Id')
   }
   const product = await prisma.product.findUnique({
     where: {
       id: productId
+    },
+    include: {
+      category: {
+        select: {
+          id: true,
+          name: true,
+          description: true
+        }
+      },
+      supplier: {
+        select: {
+          companyName: true,
+          contactName: true
+        }
+      }
     }
   })
   if (!product) {
@@ -192,5 +212,28 @@ export const getProductById = asyncHandler(async (req: Request, res: Response) =
   res.json({
     message: 'Product fetched successfully',
     product: product
+  })
+})
+
+export const getProductsByCategory = asyncHandler(async (req: Request, res: Response) => {
+  const category = req.params.category
+  if (!category) {
+    throw new Error('Please give category Id')
+  }
+  const products = await prisma.category.findUnique({
+    where: {
+      id: category
+    },
+    include: {
+      products: true
+    }
+  })
+  if (!products) {
+    throw new Error('Product not found!!')
+  }
+
+  res.json({
+    message: 'Product fetched successfully',
+    product: products
   })
 })
