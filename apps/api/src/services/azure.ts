@@ -19,7 +19,7 @@ async function uploadToBlobStorage(containerName: string, blobName: string, buff
 //@ts-ignore
 export const azureUpload = async (file: Express.Multer.File) => {
   if (!file) throw new Error('No file uploaded.')
-
+  // console.log('file ', file)
   const buffer = file.buffer
   const fileName = `${uuidv4()}_${file.originalname}`
   const containerName = 'photosandvideos' // Replace with your container name

@@ -1,34 +1,51 @@
-import config from "./config";
-import express, { Express, Request, Response } from "express";
-import cors from "cors";
-// import routes from "./routes";
-import cookieParser from "cookie-parser";
-const app: Express = express();
+import config from './config'
+import express, { Express, Request, Response } from 'express'
+import cors from 'cors'
+import cookieParser from 'cookie-parser'
+import router from './routes/index.routes'
+import { prisma } from './utils/prisma'
+import multer from 'multer'
 
-app.use(express.json());
-app.use(cookieParser());
-app.use(express.urlencoded({ extended: true }));
+const app: Express = express()
+
+// Multer configuration
+const upload = multer()
+
+app.use(express.raw())
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
+app.use(cookieParser())
 app.use(
   cors({
-    // origin: "*",
     origin: [
-      "http://localhost:3000",
-      "http://localhost:8080",
-      "http://localhost:5172",
-      "http://localhost:5173",
-      "http://localhost:5174",
-      "http://localhost:5175",
+      'http://localhost:3000',
+      'http://localhost:8080',
+      'http://localhost:5172',
+      'http://localhost:5173',
+      'http://localhost:5174',
+      'http://localhost:5175'
     ],
-    credentials: true,
+    credentials: true
   })
-);
+)
 
-// app.use("/api/v1", routes);
+// Use multer for parsing multipart/form-data
+app.use(upload.any())
 
-app.get("/", async (req: Request, res: Response) => {
-  res.send("Hello World");
-});
+app.use('/api/v1', router)
 
-app.listen(config.port, () => {
-  console.log(`[server]: Server is running at http://localhost:${config.port}`);
-});
+app.get('/', async (req: Request, res: Response) => {
+  res.send('I am healthy')
+})
+
+app.listen(config.port, async () => {
+  console.log(`[server]: Server is running at http://localhost:${config.port}`)
+  try {
+    console.log('Connecting to DB......')
+    await prisma.$connect()
+    console.log('DB connected successful.')
+  } catch (error) {
+    console.error('Error in Connecting to DB ', error)
+    process.exit(1)
+  }
+})
