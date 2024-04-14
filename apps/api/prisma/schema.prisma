@@ -135,7 +135,7 @@ model OrderDetail {
 
 model Product {
   id                String        @id @default(auto()) @map("_id") @db.ObjectId
-  sku               String
+  sku               String        @default(uuid())
   // vendorProductId   String
   name              String
   description       String

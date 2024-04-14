@@ -10,7 +10,7 @@ export const createNewProduct = asyncHandler(async (req: Request, res: Response)
   const {
     name,
     description,
-    sku,
+    // sku,
     categoryId,
     quantityPerUnit,
     unitPrice,

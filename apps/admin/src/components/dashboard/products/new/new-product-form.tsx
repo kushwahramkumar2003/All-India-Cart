@@ -1,29 +1,27 @@
 'use client';
 
+import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { MdOutlineEmail } from 'react-icons/md';
-import { PiPhoneCallLight } from 'react-icons/pi';
-import { Textarea } from 'web/components/ui/textarea';
-import z from 'zod';
+import { z } from 'zod';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { useToast } from '@/components/ui/use-toast';
+import { toast, useToast } from '@/components/ui/use-toast';
 
 const ProductSchema = z.object({
-  sku: z.string(),
+  // sku: z.string(),
   name: z.string(),
   description: z.string(),
   supplierId: z.string(),
   categoryId: z.string(),
-  quantityPerUnit: z.number(),
+  quantityPerUnit: z.number().min(0),
   unitPrice: z.number(),
   unitInStock: z.boolean(),
   msrp: z.number(),
@@ -41,15 +39,10 @@ const ProductSchema = z.object({
 });
 
 const categories = [
-  { label: 'English', value: 'en' },
-  { label: 'French', value: 'fr' },
-  { label: 'German', value: 'de' },
-  { label: 'Spanish', value: 'es' },
-  { label: 'Portuguese', value: 'pt' },
-  { label: 'Russian', value: 'ru' },
-  { label: 'Japanese', value: 'ja' },
-  { label: 'Korean', value: 'ko' },
-  { label: 'Chinese', value: 'zh' },
+  { label: 'Phone', value: 'laksndvoiaenroi' },
+  { label: 'Laptop', value: 'fralaknsdvlknasldf' },
+  { label: 'TWS', value: 'dsdfsadfe' },
+  { label: 'Gifts', value: 'esasdfasf' },
 ] as const;
 
 export default function NewProductForm(): React.JSX.Element {
@@ -104,8 +97,8 @@ export default function NewProductForm(): React.JSX.Element {
           {/*<CardContent>*/}
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className={'flex flex-col gap-6'}>
-              <div className="flex flex-col gap-6">
-                <div className={'flex flex-row justify-between gap-6 max-xmd:flex-col max-md:flex-col'}>
+              <div className="flex flex-col gap-6 ">
+                <div className={'flex flex-row justify-between gap-6 max-xmd:flex-col max-md:flex-col flex-wrap'}>
                   <FormField
                     control={form.control}
                     name="name"
@@ -128,29 +121,29 @@ export default function NewProductForm(): React.JSX.Element {
                   <FormField
                     control={form.control}
                     name="categoryId"
-                    render={({ field }) => {
-                      return (
-                        <FormItem className="flex flex-col">
-                          {/*<FormLabel>Language</FormLabel>*/}
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant="outline"
-                                  role="combobox"
-                                  className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
-                                >
-                                  {field.value
-                                    ? categories.find((category) => category.value === field.value)?.label
-                                    : 'Select category'}
-                                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-[200px] p-0">
-                              <Command>
-                                <CommandInput placeholder="Search category..." />
-                                <CommandEmpty>No category found.</CommandEmpty>
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        {/*<FormLabel>Language</FormLabel>*/}
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant="outline"
+                                role="combobox"
+                                className={cn('w-[200px] justify-between', !field.value && 'text-muted-foreground')}
+                              >
+                                {field.value
+                                  ? categories.find((category) => category.value === field.value)?.label
+                                  : 'Select category'}
+                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-[200px] p-0">
+                            <Command>
+                              <CommandInput placeholder="Search category..." />
+                              <CommandEmpty>No language found.</CommandEmpty>
+                              <CommandList>
                                 <CommandGroup>
                                   {categories.map((category) => (
                                     <CommandItem
@@ -170,29 +163,84 @@ export default function NewProductForm(): React.JSX.Element {
                                     </CommandItem>
                                   ))}
                                 </CommandGroup>
-                              </Command>
-                            </PopoverContent>
-                          </Popover>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
 
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="quantityPerUnit"
+                    render={({ field }) => {
+                      return (
+                        <FormItem className="flex flex-col space-y-1.5 ">
+                          <FormControl>
+                            <Input
+                              className={'outline-none focus:outline-none'}
+                              type="number"
+                              placeholder="Quantity Per Unit"
+                              {...field}
+                            />
+                          </FormControl>
                           <FormMessage />
                         </FormItem>
                       );
                     }}
                   />
-                  {/*<FormField*/}
-                  {/*  control={form.control}*/}
-                  {/*  name="phone"*/}
-                  {/*  render={({ field }) => {*/}
-                  {/*    return (*/}
-                  {/*      <FormItem className="flex flex-col space-y-1.5">*/}
-                  {/*        <FormControl>*/}
-                  {/*          <Input type="text" placeholder="Your Phone" {...field} />*/}
-                  {/*        </FormControl>*/}
-                  {/*        <FormMessage />*/}
-                  {/*      </FormItem>*/}
-                  {/*    );*/}
-                  {/*  }}*/}
-                  {/*/>*/}
+                  <FormField
+                    control={form.control}
+                    name="unitPrice"
+                    render={({ field }) => {
+                      return (
+                        <FormItem className="flex flex-col space-y-1.5 ">
+                          <FormControl>
+                            <Input
+                              className={'outline-none focus:outline-none'}
+                              type="number"
+                              placeholder="Unit Price"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      );
+                    }}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="unitInStock"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                        <FormControl>
+                          <Checkbox checked={field.value} onCheckedChange={field.onChange} id={'unitInStock'} />
+                        </FormControl>
+                        <FormLabel htmlFor={'unitInStock'}>Unit in stock</FormLabel>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="msrp"
+                    render={({ field }) => {
+                      return (
+                        <FormItem className="flex flex-col space-y-1.5 ">
+                          <FormControl>
+                            <Input
+                              className={'outline-none focus:outline-none'}
+                              type="number"
+                              placeholder="Unit Price"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      );
+                    }}
+                  />
                 </div>
               </div>
               <Button
