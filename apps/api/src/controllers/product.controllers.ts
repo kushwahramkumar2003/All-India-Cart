@@ -21,11 +21,12 @@ export const createNewProduct = asyncHandler(async (req: Request, res: Response)
     size,
     color,
     discount,
-    discountAvailable,
+    // discountAvailable,
     unitWeight,
-    unitsOnOrder,
+    // unitsOnOrder,
     reorderLevel,
-    productAvailable
+    productAvailable,
+    picture
   } = ProductSchema.parse(req.body)
 
   // const files = req.files as Express.Multer.File[]
@@ -34,13 +35,13 @@ export const createNewProduct = asyncHandler(async (req: Request, res: Response)
 
   //@ts-ignore
 
-  const supplier = req.user as Supplier
+  // const supplier = req.user as Supplier
 
   const product = await prisma.product.create({
     data: {
       name,
       description,
-      sku,
+      // sku,
       categoryId,
       quantityPerUnit,
       unitPrice,
@@ -52,12 +53,13 @@ export const createNewProduct = asyncHandler(async (req: Request, res: Response)
       color,
       discount,
       unitWeight,
-      unitsOnOrder,
+      // unitsOnOrder,
       reorderLevel,
       productAvailable,
-      discountAvailable,
-      // picture: productImages,
-      supplierId: supplier.id
+      // discountAvailable,
+      picture,
+      // supplierId: supplier.id,
+      supplierId: '6618e388c995af53f7fff68f'
     }
   })
 
@@ -76,7 +78,7 @@ export const updateProductDetails = asyncHandler(async (req: Request, res: Respo
     id,
     name,
     description,
-    sku,
+    // sku,
     categoryId,
     quantityPerUnit,
     unitPrice,
@@ -87,9 +89,9 @@ export const updateProductDetails = asyncHandler(async (req: Request, res: Respo
     size,
     color,
     discount,
-    discountAvailable,
+    // discountAvailable,
     unitWeight,
-    unitsOnOrder,
+    // unitsOnOrder,
     reorderLevel,
     productAvailable
   } = ProductSchema.parse(req.body)
@@ -116,7 +118,7 @@ export const updateProductDetails = asyncHandler(async (req: Request, res: Respo
     data: {
       name: name || product.name,
       description: description || product.description,
-      sku: sku || product.sku,
+      // sku: sku || product.sku,
       categoryId: categoryId || product.categoryId,
       quantityPerUnit: quantityPerUnit || product.quantityPerUnit,
       unitPrice: unitPrice || product.unitPrice,
@@ -127,9 +129,9 @@ export const updateProductDetails = asyncHandler(async (req: Request, res: Respo
       size: size || product.size,
       color: color || product.color,
       discount: discount || product.discount,
-      discountAvailable: discountAvailable || product.discountAvailable,
+      // discountAvailable: discountAvailable || product.discountAvailable,
       unitWeight: unitWeight || product.unitWeight,
-      unitsOnOrder: unitsOnOrder || product.unitsOnOrder,
+      // unitsOnOrder: unitsOnOrder || product.unitsOnOrder,
       reorderLevel: reorderLevel || product.reorderLevel,
       productAvailable: productAvailable || product.productAvailable
     }
@@ -235,5 +237,16 @@ export const getProductsByCategory = asyncHandler(async (req: Request, res: Resp
   res.json({
     message: 'Product fetched successfully',
     product: products
+  })
+})
+
+export const uploadPrductImage = asyncHandler(async (req: Request, res: Response) => {
+  const files = req.files as Express.Multer.File[]
+
+  const url = await azureUpload(files[0])
+
+  res.status(200).json({
+    message: 'Product image uploaded successfully',
+    url
   })
 })

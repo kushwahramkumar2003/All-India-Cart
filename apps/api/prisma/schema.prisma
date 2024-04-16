@@ -134,36 +134,36 @@ model OrderDetail {
 }
 
 model Product {
-  id                String        @id @default(auto()) @map("_id") @db.ObjectId
-  sku               String        @default(uuid())
+  id               String        @id @default(auto()) @map("_id") @db.ObjectId
+  sku              String        @default(uuid())
   // vendorProductId   String
-  name              String
-  description       String
-  supplier          Supplier      @relation(fields: [supplierId], references: [id])
-  supplierId        String        @db.ObjectId
-  category          Category      @relation(fields: [categoryId], references: [id])
-  categoryId        String        @db.ObjectId
-  quantityPerUnit   Int
-  unitPrice         Int
-  msrp              Int
-  availableSize     String[]
-  availableColors   String[]
-  size              String
-  color             String
-  discount          Int
-  unitWeight        Int
-  unitInStock       Boolean
-  unitsOnOrder      Int
-  reorderLevel      Int
-  productAvailable  Boolean
-  discountAvailable Int
-  currentOrder      Int?
-  picture           String[]
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
-  ranking           Float?
-  notes             String?
-  OrderDetail       OrderDetail[]
+  name             String
+  description      String
+  supplier         Supplier      @relation(fields: [supplierId], references: [id])
+  supplierId       String        @db.ObjectId
+  category         Category      @relation(fields: [categoryId], references: [id])
+  categoryId       String        @db.ObjectId
+  quantityPerUnit  Int
+  unitPrice        Int
+  msrp             Int
+  availableSize    String[]
+  availableColors  String[]
+  size             String
+  color            String
+  discount         Int
+  unitWeight       Int
+  unitInStock      Boolean
+  unitsOnOrder     Int?
+  reorderLevel     Int
+  productAvailable Boolean
+  // discountAvailable Int?
+  currentOrder     Int?
+  picture          String[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  ranking          Float?
+  notes            String?
+  OrderDetail      OrderDetail[]
 }
 
 model Supplier {
