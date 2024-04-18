@@ -29,7 +29,7 @@ const schema = zod.object({
 
 type Values = zod.infer<typeof schema>;
 
-const defaultValues = { email: 'sofia@devias.io', password: 'Secret1' } satisfies Values;
+const defaultValues = { email: 'info@indianspices.com', password: 'HacksRK2003@' } satisfies Values;
 
 export function SignInForm(): React.JSX.Element {
   const router = useRouter();
@@ -46,12 +46,12 @@ export function SignInForm(): React.JSX.Element {
     setError,
     formState: { errors },
   } = useForm<Values>({ defaultValues, resolver: zodResolver(schema) });
-
+  // const dis
   const onSubmit = React.useCallback(
     async (values: Values): Promise<void> => {
       setIsPending(true);
 
-      const { error } = await authClient.signInWithPassword(values);
+      const { error, res } = await authClient.signInWithPassword(values);
 
       if (error) {
         setError('root', { type: 'server', message: error });
@@ -68,6 +68,8 @@ export function SignInForm(): React.JSX.Element {
     },
     [checkSession, router, setError]
   );
+
+  const submitHandler = (data: zod.infer<typeof schema>) => {};
 
   return (
     <Stack spacing={4}>
@@ -138,16 +140,16 @@ export function SignInForm(): React.JSX.Element {
           </Button>
         </Stack>
       </form>
-      <Alert color="warning">
-        Use{' '}
-        <Typography component="span" sx={{ fontWeight: 700 }} variant="inherit">
-          sofia@devias.io
-        </Typography>{' '}
-        with password{' '}
-        <Typography component="span" sx={{ fontWeight: 700 }} variant="inherit">
-          Secret1
-        </Typography>
-      </Alert>
+      {/*<Alert color="warning">*/}
+      {/*  Use{' '}*/}
+      {/*  <Typography component="span" sx={{ fontWeight: 700 }} variant="inherit">*/}
+      {/*    sofia@devias.io*/}
+      {/*  </Typography>{' '}*/}
+      {/*  with password{' '}*/}
+      {/*  <Typography component="span" sx={{ fontWeight: 700 }} variant="inherit">*/}
+      {/*    Secret1*/}
+      {/*  </Typography>*/}
+      {/*</Alert>*/}
     </Stack>
   );
 }
