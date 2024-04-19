@@ -5,7 +5,7 @@ export const ProductSchema = z.object({
   // sku: z.string(),
   name: z.string(),
   description: z.string(),
-  supplierId: z.string(),
+  // supplierId: z.string(),
   categoryId: z.string(),
   quantityPerUnit: z.number(),
   unitPrice: z.number(),
@@ -17,9 +17,9 @@ export const ProductSchema = z.object({
   color: z.string(),
   discount: z.number(),
   unitWeight: z.number(),
-  unitsOnOrder: z.number(),
+  // unitsOnOrder: z.number(),
   reorderLevel: z.number(),
   productAvailable: z.boolean(),
-  discountAvailable: z.number(),
+  // discountAvailable: z.number(),
   picture: z.array(z.string()).optional()
 })

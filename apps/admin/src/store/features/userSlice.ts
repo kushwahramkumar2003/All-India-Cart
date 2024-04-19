@@ -1,8 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-import { RootState } from '@/lib/store';
-
 // Define a type for the slice state
+import { RootState } from '@/store/store';
+import { createSlice } from '@reduxjs/toolkit';
+
 export interface AuthState {
   isLoggedIn: boolean;
   status: string;
