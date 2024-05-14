@@ -33,7 +33,7 @@ export interface AuthState {
 }
 
 // Define the initial state using that type
-const initialState: AuthState = {
+export const initialState: AuthState = {
   isLoggedIn: false,
   status: 'idle',
   user: null,
@@ -50,7 +50,7 @@ export const loginUser: any = createAsyncThunk('auth/seller/login', async (data:
   }
 });
 
-export const counterSlice = createSlice({
+export const userSlice = createSlice({
   name: 'user',
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
@@ -82,8 +82,8 @@ export const counterSlice = createSlice({
   },
 });
 
-export const { logout } = counterSlice.actions;
-export const { setUserInfo } = counterSlice.actions;
+export const { logout } = userSlice.actions;
+export const { setUserInfo } = userSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectUser = (state: RootState) => state.user;
@@ -91,4 +91,4 @@ export const selectUser = (state: RootState) => state.user;
 export const loginStatus = (state: RootState) => state.products.status;
 export const loginError = (state: RootState) => state.products.error;
 
-export default counterSlice.reducer;
+export default userSlice.reducer;

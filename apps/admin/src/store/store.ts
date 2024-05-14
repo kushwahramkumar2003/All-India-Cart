@@ -1,5 +1,5 @@
 import productSlice from '@/store/features/productSlice';
-import userSlice from '@/store/features/userSlice';
+import { userSlice } from '@/store/features/userSlice';
 import { configureStore } from '@reduxjs/toolkit';
 
 export const makeStore = () => {
