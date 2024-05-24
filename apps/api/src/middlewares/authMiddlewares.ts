@@ -10,13 +10,15 @@ import { Supplier } from '@prisma/client'
 // Rate limit middleware
 export const rateLimitMiddleware = setRateLimit({
   windowMs: 10 * 60 * 1000,
-  max: 50,
+  max: 5000,
   message: 'You have exceeded your 50 request in 10 min.',
   headers: true
 })
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   if (!req?.cookies?.token) {
+    console.log('req ', req)
+    console.log('Unauthorized', req?.cookies?.token)
     return res.status(401).json({ message: 'Unauthorized' })
   }
   const token = req.cookies.token

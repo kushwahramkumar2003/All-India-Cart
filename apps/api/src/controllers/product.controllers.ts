@@ -166,12 +166,18 @@ export const deleteProduct = asyncHandler(async (req: Request, res: Response) =>
 })
 
 export const getAllSupplierProducts = asyncHandler(async (req: Request, res: Response) => {
+  const { name } = req.query
+  console.log('name', name)
   //@ts-ignore
   const user = req.user as Supplier
   const products = await prisma.product.findMany({
     where: {
-      supplierId: user.id
+      supplierId: user.id,
+      name: {
+        contains: name as string
+      }
     },
+
     include: {
       category: true
     }

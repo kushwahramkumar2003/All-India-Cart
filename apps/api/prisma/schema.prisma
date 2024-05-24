@@ -163,6 +163,7 @@ model Product {
   updatedAt        DateTime      @updatedAt
   ranking          Float?
   notes            String?
+  tag              Tags          @default(NEW)
   OrderDetail      OrderDetail[]
 }
 
@@ -202,4 +203,9 @@ model Coupon {
   code     String
   discount Int
   active   Boolean @default(true)
+}
+
+enum Tags {
+  NEW
+  FEATURED
 }

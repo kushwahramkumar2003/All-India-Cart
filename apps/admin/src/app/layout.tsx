@@ -2,8 +2,6 @@ import * as React from 'react';
 import type { Viewport } from 'next';
 
 import '@/styles/global.css';
-
-import StoreProvider from '@/app/RecoilRootProvider';
 import RecoilRootProvider from '@/app/RecoilRootProvider';
 
 import { UserProvider } from '@/contexts/user-context';
@@ -20,19 +18,19 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps): React.JSX.Element {
   return (
-    <html lang="en">
-      <body>
-        <RecoilRootProvider>
-          <ReactQueryClientProvider>
+    <ReactQueryClientProvider>
+      <html lang="en">
+        <body>
+          <RecoilRootProvider>
             <LocalizationProvider>
               <UserProvider>
                 <ThemeProvider>{children}</ThemeProvider>
               </UserProvider>
             </LocalizationProvider>
-          </ReactQueryClientProvider>
-        </RecoilRootProvider>
-        <Toaster />
-      </body>
-    </html>
+          </RecoilRootProvider>
+          <Toaster />
+        </body>
+      </html>
+    </ReactQueryClientProvider>
   );
 }
