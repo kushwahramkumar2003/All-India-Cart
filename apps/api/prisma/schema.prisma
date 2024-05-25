@@ -9,46 +9,61 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Customer {
-  id                String         @id @default(auto()) @map("_id") @db.ObjectId
-  firstName         String
-  lastName          String
-  class             String
-  room              String
-  building          String
+model User {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  username      String?      @unique
+  name          String?
+  email         String       @unique
+  provider      AuthProvider
+  password      String?
+  createdAt     DateTime     @default(now())
+  lastLogin     DateTime?
+  profile       UserProfile  @relation(fields: [userProfileId], references: [id])
+  userProfileId String       @db.ObjectId
+}
+
+model UserProfile {
+  id                String          @id @default(auto()) @map("_id") @db.ObjectId
+  class             String?
+  room              String?
+  building          String?
   addresses         Address[]
-  phone             String
-  email             String         @unique
-  voiceMail         String
-  password          String
-  creditCard        String
-  creditCardType    CreditCardType @relation(fields: [creditCardTypeID], references: [id])
-  cardExpiration    CardExpiration @relation(fields: [cardExpirationID], references: [id])
-  // billingAddress   Address   @relation("billingAddress",fields: [billingAddressId], references: [id])
-  // shippingAddress  Address   @relation( "shippingAddress",fields: [shippingAddressId], references: [id])
-  dateEntered       DateTime
-  dateUpdated       DateTime
-  active            Boolean
-  deleted           Boolean
+  voiceMail         String?
+  creditCard        String?
+  dateEntered       DateTime?
+  dateUpdated       DateTime?
+  active            Boolean         @default(true)
+  deleted           Boolean         @default(false)
   notes             String?
-  creditCardTypeID  String         @db.ObjectId
-  cardExpirationID  String         @db.ObjectId
-  billingAddressId  String         @db.ObjectId
-  shippingAddressId String         @db.ObjectId
+  billingAddressId  String?         @db.ObjectId
+  shippingAddressId String?         @db.ObjectId
   Order             Order[]
+  createdAt         DateTime        @default(now())
+  User              User[]
+  CreditCardType    CreditCardType? @relation(fields: [creditCardTypeId], references: [id])
+  creditCardTypeId  String?         @db.ObjectId
+  CardExpiration    CardExpiration? @relation(fields: [cardExpirationId], references: [id])
+  cardExpirationId  String?         @db.ObjectId
+}
+
+enum AuthProvider {
+  EMAIL
+  GOOGLE
+  FACEBOOK
+  GITHUB
 }
 
 model Address {
-  id         String      @id @default(auto()) @map("_id") @db.ObjectId
-  customer   Customer    @relation(fields: [customerId], references: [id])
-  customerId String      @db.ObjectId
-  street     String
-  city       String
-  state      String
-  postalCode String
-  country    String
-  type       AddressType @relation(fields: [typeId], references: [id])
-  typeId     String      @db.ObjectId
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  street        String
+  city          String
+  state         String
+  postalCode    String
+  country       String
+  type          AddressType  @relation(fields: [typeId], references: [id])
+  typeId        String       @db.ObjectId
+  UserProfile   UserProfile? @relation(fields: [userProfileId], references: [id])
+  userProfileId String?      @db.ObjectId
 }
 
 model AddressType {
@@ -58,16 +73,18 @@ model AddressType {
 }
 
 model CreditCardType {
-  id        String     @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  customers Customer[]
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  // users       User[]
+  UserProfile UserProfile[]
 }
 
 model CardExpiration {
-  id        String     @id @default(auto()) @map("_id") @db.ObjectId
-  month     Int
-  year      Int
-  customers Customer[]
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  month       Int
+  year        Int
+  // users       User[]
+  UserProfile UserProfile[]
 }
 
 model Category {
@@ -95,8 +112,6 @@ model Payment {
 
 model Order {
   id             String        @id @default(auto()) @map("_id") @db.ObjectId
-  customer       Customer      @relation(fields: [customerId], references: [id])
-  customerId     String        @db.ObjectId
   orderNumber    Int
   payment        Payment       @relation(fields: [paymentId], references: [id])
   paymentId      String        @db.ObjectId
@@ -116,6 +131,8 @@ model Order {
   paid           Boolean
   paymentDate    DateTime
   orderDetails   OrderDetail[]
+  UserProfile    UserProfile?  @relation(fields: [userProfileId], references: [id])
+  userProfileId  String?       @db.ObjectId
 }
 
 model OrderDetail {
@@ -136,7 +153,6 @@ model OrderDetail {
 model Product {
   id               String        @id @default(auto()) @map("_id") @db.ObjectId
   sku              String        @default(uuid())
-  // vendorProductId   String
   name             String
   description      String
   supplier         Supplier      @relation(fields: [supplierId], references: [id])
