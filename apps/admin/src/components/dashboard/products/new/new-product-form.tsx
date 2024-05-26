@@ -191,6 +191,7 @@ export default function NewProductForm(): React.JSX.Element {
                           );
                         }}
                       />
+                      <div></div>
                       <FormField
                         control={form.control}
                         name="name"
@@ -201,7 +202,7 @@ export default function NewProductForm(): React.JSX.Element {
                                 <Input
                                   className={'outline-none focus:outline-none'}
                                   type="text"
-                                  placeholder="Your name"
+                                  placeholder="Product name"
                                   {...field}
                                 />
                               </FormControl>

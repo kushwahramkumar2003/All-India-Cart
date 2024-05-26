@@ -8,12 +8,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { SignIn, SignOut } from "./auth-components";
+// import { SignIn, SignOut } from "./auth-components";
 import Link from "next/link";
 
 export default async function UserButton() {
   const session = await auth();
-  if (!session?.user) return <SignIn />;
+  if (!session?.user) return; // <SignIn />
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -48,9 +48,7 @@ export default async function UserButton() {
             Account
           </Link>
         </DropdownMenuItem>{" "}
-        <DropdownMenuItem>
-          <SignOut />
-        </DropdownMenuItem>
+        <DropdownMenuItem>{/*<SignOut />*/}</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

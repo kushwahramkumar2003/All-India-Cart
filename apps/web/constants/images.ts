@@ -21,6 +21,7 @@ import controllerImg2 from "@/assets/image 55.png";
 import controllerImg3 from "@/assets/image 61.png";
 import controllerImg4 from "@/assets/image 59.png";
 import mainControllerImg from "@/assets/image 63.png";
+import signupandloginimage from "@/assets/dl.beatsnoop 1.svg";
 
 export const images = {
   qrcodeImg: qrcodeImg,
@@ -39,6 +40,7 @@ export const images = {
   willSmith,
   monitor,
   cartController,
+  signupandloginimage,
   controllerArr: [
     controllerImg1,
     controllerImg2,

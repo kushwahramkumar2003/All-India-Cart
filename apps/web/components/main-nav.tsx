@@ -7,6 +7,7 @@ import { IoMdHeartEmpty } from "react-icons/io";
 import { IoCartOutline } from "react-icons/io5";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { Button } from "@/components/ui/button";
 
 const links = [
   {
@@ -66,6 +67,20 @@ export function MainNav() {
           {" "}
           <IoMdHeartEmpty size={37} />
         </Link>
+        <Button
+          onClick={() => {
+            window.open(`http://localhost:8080/api/v1/auth/github`, "_self");
+          }}
+        >
+          Github
+        </Button>
+        <Button
+          onClick={() => {
+            window.open(`http://localhost:8080/api/v1/auth/google`, "_self");
+          }}
+        >
+          Google
+        </Button>
         <Link href={"/cart"}>
           <IoCartOutline size={37} />
         </Link>

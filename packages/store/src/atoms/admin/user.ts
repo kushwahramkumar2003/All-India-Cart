@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 
-export interface User {
+export interface Admin {
   email: string;
   name: string;
   companyName: string;
@@ -20,7 +20,7 @@ export interface User {
 export interface AuthState {
   isLoggedIn: boolean;
 
-  user: User | null;
+  user: Admin | null;
 }
 
 const getGetAuthStateFromLocalStorage = (): null | AuthState => {
@@ -29,8 +29,8 @@ const getGetAuthStateFromLocalStorage = (): null | AuthState => {
   return JSON.parse(authUser) as AuthState;
 };
 
-export const userAtom = atom<null | User>({
-  key: "userAtom",
+export const adminAtom = atom<null | Admin>({
+  key: "adminAtom",
   default: null,
 });
 export const authStateAtom = atom<AuthState | null>({

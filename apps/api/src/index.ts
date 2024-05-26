@@ -5,16 +5,30 @@ import cookieParser from 'cookie-parser'
 import router from './routes/index.routes'
 import { prisma } from './utils/prisma'
 import multer from 'multer'
+import { initPassport } from './utils/passport'
+import session from 'express-session'
+import passport from 'passport'
 
 const app: Express = express()
 
 // Multer configuration
 const upload = multer()
 
+app.use(
+  session({
+    secret: config.COOKIE_SECRET || 'keyboard cat',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }
+  })
+)
 app.use(express.raw())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(cookieParser())
+initPassport()
+app.use(passport.initialize())
+app.use(passport.authenticate('session'))
 app.use(
   cors({
     origin: [
