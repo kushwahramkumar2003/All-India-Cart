@@ -13,6 +13,7 @@ export interface User {
   name?: string | null;
   email: string;
   provider: AuthProvider;
+  avatar?: string;
   createdAt: Date;
   lastLogin?: Date | null;
   profile: UserProfile;

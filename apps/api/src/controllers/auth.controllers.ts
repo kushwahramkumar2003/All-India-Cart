@@ -113,10 +113,10 @@ export const sellerLogin = asyncHandler(async (req: Request, res: Response) => {
  * @apiGroup Auth
  * @apiDescription Logout a user
  ****************************************/
-export const logout = asyncHandler(async (req: Request, res: Response) => {
-  res.clearCookie('token', cookieOptions)
-  res.status(200).json({ message: 'User Logged out successfully' })
-})
+// export const logout = asyncHandler(async (req: Request, res: Response) => {
+//   res.clearCookie('token', cookieOptions)
+//   res.status(200).json({ message: 'User Logged out successfully' })
+// })
 
 export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
   if (!req?.body.id) {
@@ -308,15 +308,20 @@ export const refreshToken = asyncHandler(async (req: Request, res: Response) => 
 export const loginFailed = asyncHandler((req: Request, res: Response) => {
   res.status(401).json({ success: false, message: 'failure' })
 })
-
-// export const logout = asyncHandler((req: Request, res: Response) => {
-//   req.logout((err) => {
-//     if (err) {
-//       console.error('Error logging out:', err)
-//       res.status(500).json({ error: 'Failed to log out' })
-//     } else {
-//       res.clearCookie('jwt')
-//       res.redirect('http://localhost:5173/')
-//     }
-//   })
-// }))
+export const logout = asyncHandler((req: Request, res: Response) => {
+  req.logout((err) => {
+    if (err) {
+      console.error('Error logging out:', err)
+      res.status(500).json({ error: 'Failed to log out' })
+    } else {
+      console.error('logout called...')
+      res.clearCookie('jwt')
+      res.clearCookie('token')
+      // res.redirect('http://localhost:3000')
+      // Corrected line
+      res.status(200).json({
+        message: 'Logout successfully!!'
+      })
+    }
+  })
+})

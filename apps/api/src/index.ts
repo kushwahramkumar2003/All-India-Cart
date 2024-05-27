@@ -14,6 +14,24 @@ const app: Express = express()
 // Multer configuration
 const upload = multer()
 
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:8080',
+    'http://localhost:5172',
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:5175'
+  ],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  optionsSuccessStatus: 204
+}
+
+app.use(cors(corsOptions))
+app.options('*', cors(corsOptions)) // Pre-flight handling
+
 app.use(
   session({
     secret: config.COOKIE_SECRET || 'keyboard cat',
@@ -29,20 +47,6 @@ app.use(cookieParser())
 initPassport()
 app.use(passport.initialize())
 app.use(passport.authenticate('session'))
-app.use(
-  cors({
-    origin: [
-      'http://localhost:3000',
-      'http://localhost:8080',
-      'http://localhost:5172',
-      'http://localhost:5173',
-      'http://localhost:5174',
-      'http://localhost:5175'
-    ],
-    credentials: true
-  })
-)
-
 // Use multer for parsing multipart/form-data
 app.use(upload.any())
 

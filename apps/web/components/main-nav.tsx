@@ -67,20 +67,7 @@ export function MainNav() {
           {" "}
           <IoMdHeartEmpty size={37} />
         </Link>
-        <Button
-          onClick={() => {
-            window.open(`http://localhost:8080/api/v1/auth/github`, "_self");
-          }}
-        >
-          Github
-        </Button>
-        <Button
-          onClick={() => {
-            window.open(`http://localhost:8080/api/v1/auth/google`, "_self");
-          }}
-        >
-          Google
-        </Button>
+
         <Link href={"/cart"}>
           <IoCartOutline size={37} />
         </Link>
