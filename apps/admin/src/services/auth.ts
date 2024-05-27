@@ -17,6 +17,7 @@ export const login = async (formData: any) => {
   try {
     const { data } = await axiosClient.post('/auth/seller/login', formData);
     return data;
+    //@ts-ignore
   } catch (error: Error) {
     console.error('Error in login function:', error);
     throw new Error(error?.response?.data?.message);

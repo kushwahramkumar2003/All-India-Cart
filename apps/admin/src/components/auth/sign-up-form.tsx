@@ -70,7 +70,7 @@ export function SignUpForm(): React.JSX.Element {
   //   [checkSession, router, setError]
   // );
 
-  const onSubmit = (formData) => {
+  const onSubmit = (formData: FormData) => {
     console.log(formData);
   };
 
@@ -85,7 +85,13 @@ export function SignUpForm(): React.JSX.Element {
           </Link>
         </Typography>
       </Stack>
-      <form onSubmit={handleSubmit(onSubmit)}>
+
+      <form
+        onSubmit={
+          //@ts-ignore
+          handleSubmit(onSubmit)
+        }
+      >
         <Stack spacing={2}>
           <Controller
             control={control}

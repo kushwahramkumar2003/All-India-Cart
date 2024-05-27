@@ -17,7 +17,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Eye as EyeIcon } from '@phosphor-icons/react/dist/ssr/Eye';
 import { EyeSlash as EyeSlashIcon } from '@phosphor-icons/react/dist/ssr/EyeSlash';
-import { authStateAtom, User, userAtom } from '@repo/store';
+import { Admin, adminAtom, authStateAtom, userAtom } from '@repo/store';
 import { useMutation } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
@@ -38,10 +38,10 @@ type Values = zod.infer<typeof schema>;
 
 const defaultValues = { email: 'info@indianspices.com', password: 'HacksRK2003@' } satisfies Values;
 
-export function SignInForm(): React.JSX.Element {
+function SignInForm(): React.JSX.Element {
   const { toast } = useToast();
   const router = useRouter();
-  const [userState, setUserState] = useRecoilState(userAtom);
+  const [userState, setUserState] = useRecoilState(adminAtom);
   const [authState, setAuthState] = useRecoilState(authStateAtom);
   const { checkSession } = useUser();
 
@@ -52,7 +52,7 @@ export function SignInForm(): React.JSX.Element {
       return await login(data);
     },
     onSuccess: (data) => {
-      const user: User = data?.user;
+      const user: Admin = data?.user;
       console.log('Login successfully ', data);
       toast({
         description: 'Login successfully.',
@@ -181,3 +181,5 @@ export function SignInForm(): React.JSX.Element {
     </Stack>
   );
 }
+
+export default SignInForm;
