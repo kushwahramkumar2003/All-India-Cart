@@ -12,7 +12,6 @@ import {
 import Link from "next/link";
 import { useUser } from "@repo/store";
 import { FaRegUser } from "react-icons/fa6";
-
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import axios from "axios";

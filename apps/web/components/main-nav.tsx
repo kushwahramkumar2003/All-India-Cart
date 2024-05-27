@@ -7,7 +7,6 @@ import { IoMdHeartEmpty } from "react-icons/io";
 import { IoCartOutline } from "react-icons/io5";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { Button } from "@/components/ui/button";
 
 const links = [
   {

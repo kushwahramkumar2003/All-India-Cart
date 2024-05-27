@@ -23,11 +23,11 @@ export interface AuthState {
   user: Admin | null;
 }
 
-const getGetAuthStateFromLocalStorage = (): null | AuthState => {
-  const authUser = localStorage.getItem("authUser");
-  if (authUser === "undefined" || !authUser) return null;
-  return JSON.parse(authUser) as AuthState;
-};
+// const getGetAuthStateFromLocalStorage = (): null | AuthState => {
+//   const authUser = localStorage.getItem("authUser");
+//   if (authUser === "undefined" || !authUser) return null;
+//   return JSON.parse(authUser) as AuthState;
+// };
 
 export const adminAtom = atom<null | Admin>({
   key: "adminAtom",
@@ -35,5 +35,5 @@ export const adminAtom = atom<null | Admin>({
 });
 export const authStateAtom = atom<AuthState | null>({
   key: "authStateAtom",
-  default: getGetAuthStateFromLocalStorage(),
+  default: null,
 });

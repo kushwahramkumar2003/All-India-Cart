@@ -45,14 +45,17 @@ const ContactSchema = z.object({
 
 export default function Index() {
   const user = useUser();
+  const defaultAddress = user?.profile?.addresses ? "" : "";
   const { toast } = useToast();
   const form = useForm<z.infer<typeof ContactSchema>>({
     resolver: zodResolver(ContactSchema),
     defaultValues: {
       email: user.email,
-      firstName: user.name?.split(" ")[0],
-      lastName: user.name?.split(" ")[1],
-      address: user.profile.addresses || "",
+      firstName: user.name?.split(" ")[0] || "",
+      lastName: user.name?.split(" ")[1] || "",
+      address: user?.profile?.addresses?.[0]
+        ? `${user.profile.addresses[0].street}, ${user.profile.addresses[0].city}, ${user.profile.addresses[0].state}`
+        : "",
     },
   });
 
