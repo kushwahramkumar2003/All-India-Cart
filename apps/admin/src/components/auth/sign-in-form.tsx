@@ -1,8 +1,10 @@
 'use client';
 
 import * as React from 'react';
+import { useEffect } from 'react';
 import RouterLink from 'next/link';
 import { useRouter } from 'next/navigation';
+import { login } from '@/services/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
@@ -15,12 +17,17 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Eye as EyeIcon } from '@phosphor-icons/react/dist/ssr/Eye';
 import { EyeSlash as EyeSlashIcon } from '@phosphor-icons/react/dist/ssr/EyeSlash';
+import { Admin, adminAtom, authStateAtom, userAtom } from '@repo/store';
+import { useMutation } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
+import { useRecoilState } from 'recoil';
 import { z as zod } from 'zod';
 
 import { paths } from '@/paths';
 import { authClient } from '@/lib/auth/client';
 import { useUser } from '@/hooks/use-user';
+import { ToastAction } from '@/components/ui/toast';
+import { useToast } from '@/components/ui/use-toast';
 
 const schema = zod.object({
   email: zod.string().min(1, { message: 'Email is required' }).email(),
@@ -31,14 +38,54 @@ type Values = zod.infer<typeof schema>;
 
 const defaultValues = { email: 'info@indianspices.com', password: 'HacksRK2003@' } satisfies Values;
 
-export function SignInForm(): React.JSX.Element {
+function SignInForm(): React.JSX.Element {
+  const { toast } = useToast();
   const router = useRouter();
-
+  const [userState, setUserState] = useRecoilState(adminAtom);
+  const [authState, setAuthState] = useRecoilState(authStateAtom);
   const { checkSession } = useUser();
 
   const [showPassword, setShowPassword] = React.useState<boolean>();
 
-  const [isPending, setIsPending] = React.useState<boolean>(false);
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (data: zod.infer<typeof schema>) => {
+      return await login(data);
+    },
+    onSuccess: (data) => {
+      const user: Admin = data?.user;
+      console.log('Login successfully ', data);
+      toast({
+        description: 'Login successfully.',
+      });
+      console.log(user);
+      setUserState(user);
+      setAuthState({
+        isLoggedIn: true,
+        user: user || null,
+      });
+      console.log('auth user reached', {
+        isLoggedIn: true,
+        user: user || null,
+      });
+      localStorage.setItem(
+        'authUser',
+        JSON.stringify({
+          isLoggedIn: true,
+          user: user || null,
+        })
+      );
+      router.replace(paths.dashboard.overview);
+    },
+    onError: (error) => {
+      console.log('error ', error);
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: error.message,
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+    },
+  });
 
   const {
     control,
@@ -46,30 +93,11 @@ export function SignInForm(): React.JSX.Element {
     setError,
     formState: { errors },
   } = useForm<Values>({ defaultValues, resolver: zodResolver(schema) });
-  // const dis
-  const onSubmit = React.useCallback(
-    async (values: Values): Promise<void> => {
-      setIsPending(true);
+  const submitHandler = (data: zod.infer<typeof schema>) => {
+    mutate(data);
+  };
 
-      const { error, res } = await authClient.signInWithPassword(values);
-
-      if (error) {
-        setError('root', { type: 'server', message: error });
-        setIsPending(false);
-        return;
-      }
-
-      // Refresh the auth state
-      await checkSession?.();
-
-      // UserProvider, for this case, will not refresh the router
-      // After refresh, GuestGuard will handle the redirect
-      router.refresh();
-    },
-    [checkSession, router, setError]
-  );
-
-  const submitHandler = (data: zod.infer<typeof schema>) => {};
+  useEffect(() => {}, []);
 
   return (
     <Stack spacing={4}>
@@ -82,7 +110,7 @@ export function SignInForm(): React.JSX.Element {
           </Link>
         </Typography>
       </Stack>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(submitHandler)}>
         <Stack spacing={2}>
           <Controller
             control={control}
@@ -153,3 +181,5 @@ export function SignInForm(): React.JSX.Element {
     </Stack>
   );
 }
+
+export default SignInForm;

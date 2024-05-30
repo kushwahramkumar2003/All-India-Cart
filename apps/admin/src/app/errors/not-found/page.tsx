@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import type { Metadata } from 'next';
 import RouterLink from 'next/link';
@@ -10,7 +12,7 @@ import { ArrowLeft as ArrowLeftIcon } from '@phosphor-icons/react/dist/ssr/Arrow
 import { config } from '@/config';
 import { paths } from '@/paths';
 
-export const metadata = { title: `Not found | Errors | ${config.site.name}` } satisfies Metadata;
+// export const metadata = { title: `Not found | Errors | ${config.site.name}` } satisfies Metadata;
 
 export default function NotFound(): React.JSX.Element {
   return (

@@ -48,27 +48,31 @@ export function SignUpForm(): React.JSX.Element {
     formState: { errors },
   } = useForm<Values>({ defaultValues, resolver: zodResolver(schema) });
 
-  const onSubmit = React.useCallback(
-    async (values: Values): Promise<void> => {
-      setIsPending(true);
+  // const onSubmit = React.useCallback(
+  //   async (values: Values): Promise<void> => {
+  //     setIsPending(true);
+  //
+  //     const { error } = await authClient.signUp(values);
+  //
+  //     if (error) {
+  //       setError('root', { type: 'server', message: error });
+  //       setIsPending(false);
+  //       return;
+  //     }
+  //
+  //     // Refresh the auth state
+  //     await checkSession?.();
+  //
+  //     // UserProvider, for this case, will not refresh the router
+  //     // After refresh, GuestGuard will handle the redirect
+  //     router.refresh();
+  //   },
+  //   [checkSession, router, setError]
+  // );
 
-      const { error } = await authClient.signUp(values);
-
-      if (error) {
-        setError('root', { type: 'server', message: error });
-        setIsPending(false);
-        return;
-      }
-
-      // Refresh the auth state
-      await checkSession?.();
-
-      // UserProvider, for this case, will not refresh the router
-      // After refresh, GuestGuard will handle the redirect
-      router.refresh();
-    },
-    [checkSession, router, setError]
-  );
+  const onSubmit = (formData: FormData) => {
+    console.log(formData);
+  };
 
   return (
     <Stack spacing={3}>
@@ -81,7 +85,13 @@ export function SignUpForm(): React.JSX.Element {
           </Link>
         </Typography>
       </Stack>
-      <form onSubmit={handleSubmit(onSubmit)}>
+
+      <form
+        onSubmit={
+          //@ts-ignore
+          handleSubmit(onSubmit)
+        }
+      >
         <Stack spacing={2}>
           <Controller
             control={control}

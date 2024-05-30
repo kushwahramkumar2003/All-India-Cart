@@ -3,11 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Check, ChevronsUpDown } from 'lucide-react';
-import ReactDOM from 'react-dom';
-// Import React FilePond
 import { FilePond, registerPlugin } from 'react-filepond';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { string, z } from 'zod';
 
 // Import FilePond styles
 import 'filepond/dist/filepond.min.css';
@@ -20,9 +18,9 @@ import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 
-import { CreateNewProduct, createNewProductError, createNewProductStatus } from '@/store/features/productSlice';
+import { createNewProduct } from '@/services/product';
+import { useMutation } from '@tanstack/react-query';
 import { VscLoading } from 'react-icons/vsc';
-import { useDispatch, useSelector } from 'react-redux';
 import CreatableSelect from 'react-select/creatable';
 
 import { cn } from '@/lib/utils';
@@ -36,7 +34,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Textarea } from '@/components/ui/textarea';
 import { toast, useToast } from '@/components/ui/use-toast';
 
-// Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5;
@@ -75,48 +72,68 @@ export const ProductSchema = z.object({
   reorderLevel: z.number(),
   productAvailable: z.boolean(),
   // discountAvailable: z.number(),
-  picture: z.array(pictureSchema).optional(),
+  picture: z.array(string()).optional(),
 });
 
 const categories = [{ label: 'mobile', value: '6618ec70c162cb5d116a2303' }] as const;
 
 export default function NewProductForm(): React.JSX.Element {
-  const submitStatus = useSelector(createNewProductStatus);
-  const submitError = useSelector(createNewProductError);
-  const dispatch = useDispatch();
   const { toast } = useToast();
   const [files, setFiles] = useState<File[]>([]);
   const [pictures, setPictures] = useState<string[]>([]);
   const [availableSize, setAvailableSize] = useState<string[]>([]);
   const [availableColors, setAvailableColors] = useState<string[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof ProductSchema>>({
     resolver: zodResolver(ProductSchema),
   });
 
-  const submitHandler = async (data: z.infer<typeof ProductSchema>) => {
-    console.log('Data --> ', { ...data, picture: pictures, availableSize, availableColors });
-    await dispatch(
-      CreateNewProduct({
+  const { mutate, isPending: loading } = useMutation({
+    mutationFn: async (data: z.infer<typeof ProductSchema>) => {
+      return await createNewProduct({
         ...data,
         picture: pictures,
         availableSize: availableSize,
         availableColors: availableColors,
-      })
-    );
+      });
+    },
+    onSuccess: (data) => {
+      console.log('Product created successfully', data);
+      toast({
+        description: 'Product Added!',
+      });
+      //@ts-ignore
+      form.reset({
+        picture: [],
+        availableColors: [],
+        availableSize: [],
+        name: '',
+        color: '',
+        categoryId: '',
+        description: '',
+        discount: '',
+        msrp: '',
+        productAvailable: '',
+        size: '',
+        quantityPerUnit: '',
+        reorderLevel: '',
+        unitInStock: '',
+        unitPrice: '',
+        unitWeight: '',
+      });
+      setAvailableColors([]);
+      setAvailableSize([]);
+    },
+    onError: (error) => {
+      toast({
+        variant: 'destructive',
+        description: 'Error occure when creating new product',
+      });
+      console.log('error --> ', error);
+    },
+  });
+  const submitHandler = async (data: z.infer<typeof ProductSchema>) => {
+    mutate({ ...data, picture: pictures, availableSize, availableColors });
   };
-  useEffect(() => {
-    if (submitStatus === 'loading') {
-      setLoading(true);
-    } else if (submitStatus === 'error') {
-      setLoading(false);
-    } else if (submitStatus === 'idle') {
-      setLoading(false);
-    }
-    if (submitError) {
-      setLoading(false);
-    }
-  }, [submitError, submitStatus]);
 
   return (
     <div className="w-full space-y-10 transition-all duration-300 mt-4 mb-10 p-4">
@@ -135,6 +152,7 @@ export default function NewProductForm(): React.JSX.Element {
                           return (
                             <FormItem className=" flex-col space-y-1.5 inline">
                               <FormControl>
+                                {/* @ts-ignore */}
                                 <FilePond
                                   files={files}
                                   // onupdatefiles={setFiles}
@@ -173,6 +191,7 @@ export default function NewProductForm(): React.JSX.Element {
                           );
                         }}
                       />
+                      <div></div>
                       <FormField
                         control={form.control}
                         name="name"
@@ -183,7 +202,7 @@ export default function NewProductForm(): React.JSX.Element {
                                 <Input
                                   className={'outline-none focus:outline-none'}
                                   type="text"
-                                  placeholder="Your name"
+                                  placeholder="Product name"
                                   {...field}
                                 />
                               </FormControl>

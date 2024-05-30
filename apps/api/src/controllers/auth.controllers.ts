@@ -4,6 +4,8 @@ import { SignUpSupplierSchema, SupplierLoginSchema } from '../types/supplier'
 import { prisma } from '../utils/prisma'
 import bcrypt from 'bcrypt'
 import getNewToken from '../utils/jwtToken'
+import jwt from 'jsonwebtoken'
+import config from '../config'
 
 const cookieOptions = {
   httpOnly: true,
@@ -111,10 +113,10 @@ export const sellerLogin = asyncHandler(async (req: Request, res: Response) => {
  * @apiGroup Auth
  * @apiDescription Logout a user
  ****************************************/
-export const logout = asyncHandler(async (req: Request, res: Response) => {
-  res.clearCookie('token', cookieOptions)
-  res.status(200).json({ message: 'User Logged out successfully' })
-})
+// export const logout = asyncHandler(async (req: Request, res: Response) => {
+//   res.clearCookie('token', cookieOptions)
+//   res.status(200).json({ message: 'User Logged out successfully' })
+// })
 
 export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
   if (!req?.body.id) {
@@ -164,4 +166,162 @@ export const updatePassword = asyncHandler(async (req: Request, res: Response) =
   user.password = ''
 
   res.status(200).json({ message: 'Password updated successfully' })
+})
+
+interface User {
+  id: string
+}
+
+export const refreshToken = asyncHandler(async (req: Request, res: Response) => {
+  console.log('refresh token endpoint hit')
+  if (req.user) {
+    const user = req.user as User
+
+    // Token is issued so it can be shared b/w HTTP and ws server
+    // Todo: Make this temporary and add refresh logic here
+
+    const userDb = await prisma.user.findFirst({
+      where: {
+        id: user.id
+      },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        avatar: true,
+        name: true,
+        provider: true,
+        lastLogin: true,
+        profile: {
+          select: {
+            class: true,
+            room: true,
+            building: true,
+            addresses: {
+              select: {
+                id: true,
+                street: true,
+                city: true,
+                state: true,
+                postalCode: true,
+                country: true,
+                type: {
+                  select: {
+                    id: true,
+                    name: true
+                  }
+                }
+              }
+            },
+            voiceMail: true,
+            creditCard: true,
+            dateEntered: true,
+            dateUpdated: true,
+            active: true,
+            notes: true,
+            Order: {
+              select: {
+                id: true,
+                orderNumber: true,
+                orderDate: true,
+                shipDate: true,
+                requiredDate: true,
+                freight: true,
+                salesTax: true,
+                timestamp: true,
+                transactStatus: true,
+                errLocation: true,
+                errMsg: true,
+                fulfilled: true,
+                deleted: true,
+                paid: true,
+                paymentDate: true,
+                orderDetails: {
+                  select: {
+                    id: true,
+                    price: true,
+                    quantity: true,
+                    discount: true,
+                    total: true,
+                    fulfilled: true,
+                    shipDate: true,
+                    billDate: true,
+                    product: {
+                      select: {
+                        id: true,
+                        name: true,
+                        description: true,
+                        sku: true,
+                        unitPrice: true,
+                        msrp: true,
+                        quantityPerUnit: true,
+                        unitWeight: true,
+                        unitInStock: true,
+                        category: {
+                          select: {
+                            id: true,
+                            name: true,
+                            description: true
+                          }
+                        },
+                        supplier: {
+                          select: {
+                            id: true,
+                            companyName: true
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                payment: {
+                  select: {
+                    id: true,
+                    type: true,
+                    allowed: true
+                  }
+                },
+                shipper: {
+                  select: {
+                    id: true,
+                    companyName: true,
+                    phone: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    })
+
+    const token = jwt.sign({ userId: user.id }, config.jwtSecret)
+    res.json({
+      token,
+      ...userDb
+    })
+  } else {
+    res.status(401).json({ success: false, message: 'Unauthorized' })
+  }
+})
+
+export const loginFailed = asyncHandler((req: Request, res: Response) => {
+  res.status(401).json({ success: false, message: 'failure' })
+})
+export const logout = asyncHandler((req: Request, res: Response) => {
+  req.logout((err) => {
+    if (err) {
+      console.error('Error logging out:', err)
+      res.status(500).json({ error: 'Failed to log out' })
+    } else {
+      console.error('logout called...')
+      res.clearCookie('jwt')
+      res.clearCookie('token')
+      // res.redirect('http://localhost:3000')
+      // Corrected line
+      res.status(200).json({
+        message: 'Logout successfully!!'
+      })
+    }
+  })
 })

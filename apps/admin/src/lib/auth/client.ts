@@ -1,9 +1,5 @@
 'use client';
 
-import { login } from '@/services/auth';
-import { setUserInfo } from '@/store/features/userSlice';
-import { useDispatch } from 'react-redux';
-
 import type { User } from '@/types/user';
 
 function generateToken(): string {
@@ -53,25 +49,6 @@ class AuthClient {
 
   async signInWithOAuth(_: SignInWithOAuthParams): Promise<{ error?: string }> {
     return { error: 'Social authentication not implemented' };
-  }
-
-  async signInWithPassword(params: SignInWithPasswordParams): Promise<{ error?: string; res: any }> {
-    const dispatch = useDispatch();
-    const { email, password } = params;
-
-    // Make API request
-    const res = await login(params);
-
-    // We do not handle the API, so we'll check if the credentials match with the hardcoded ones.
-    // if (email !== 'sofia@devias.io' || password !== 'Secret1') {
-    //   return { error: 'Invalid credentials' };
-    // }
-
-    const token = generateToken();
-    // dispatch(setUserInfo(res.user));
-    localStorage.setItem('custom-auth-token', token);
-
-    return { res };
   }
 
   async resetPassword(_: ResetPasswordParams): Promise<{ error?: string }> {
