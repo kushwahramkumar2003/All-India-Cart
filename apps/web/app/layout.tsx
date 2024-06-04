@@ -20,10 +20,9 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
       <body className={inter.className}>
         <RecoilRootProvider>
           <ReactQueryClientProvider>
-            <AuthApp />
+            {/*<AuthApp />*/}
             <div className="flex flex-col justify-between w-full h-full min-h-screen">
               <Header />
-
               <main className="flex-auto w-full max-w-[65rem] px-4 py-4 mx-auto sm:px-6 md:py-6">
                 {children}
               </main>

@@ -19,7 +19,7 @@ import axios from "axios";
 export default function UserButton() {
   const { toast } = useToast();
   const router = useRouter();
-  const user = useUser();
+  const { user, loading } = useUser();
   const logoutHandler = async () => {
     try {
       const response = await axios.get(
