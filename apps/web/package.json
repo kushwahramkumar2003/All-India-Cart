@@ -30,6 +30,7 @@
     "@repo/types": "*",
     "@tanstack/react-query": "^5.28.0",
     "@tanstack/react-query-devtools": "^5.28.0",
+    "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "embla-carousel-autoplay": "^8.0.0",

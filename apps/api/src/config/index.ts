@@ -18,7 +18,10 @@ const config = {
   ALLOWED_HOSTS: process.env.ALLOWED_HOSTS,
   AUTH_REDIRECT_URL: process.env.AUTH_REDIRECT_URL,
   CLIENT_URL: process.env.CLIENT_URL,
-  COOKIE_SECRET: process.env.COOKIE_SECRET || '998awheifuabskjdbfiuwrb'
+  COOKIE_SECRET: process.env.COOKIE_SECRET || '998awheifuabskjdbfiuwrb',
+  REDIS_PASSWORD: process.env.REDIS_PASSWORD,
+  REDIS_PORT: process.env.REDIS_PORT,
+  REDIS_HOST: process.env.REDIS_HOST
 }
 
 export default config
