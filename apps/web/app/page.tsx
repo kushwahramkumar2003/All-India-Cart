@@ -1,8 +1,3 @@
-// page.tsx
-
-import CustomLink from "@/components/reusable/custom-link";
-import packageJSON from "../package.json";
-
 import constants from "@/constants";
 import ImageScroller from "@/components/core/home/ImageScroller";
 import TodaySale from "@/components/core/home/TodaySale";
@@ -23,7 +18,7 @@ export default function Index() {
       <Promotion />
       <OurProducts />
       <Featured />
-        <Promise/>
+      <Promise />
     </div>
   );
 }

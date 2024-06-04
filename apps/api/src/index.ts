@@ -8,6 +8,7 @@ import multer from 'multer'
 import { initPassport } from './utils/passport'
 import session from 'express-session'
 import passport from 'passport'
+import redisClient from './utils/redisClient'
 
 const app: Express = express()
 
@@ -61,6 +62,7 @@ app.listen(config.port, async () => {
   try {
     console.log('Connecting to DB......')
     await prisma.$connect()
+    await redisClient.connect()
     console.log('DB connected successful.')
   } catch (error) {
     console.error('Error in Connecting to DB ', error)

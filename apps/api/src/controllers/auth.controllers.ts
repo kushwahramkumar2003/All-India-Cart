@@ -6,6 +6,7 @@ import bcrypt from 'bcrypt'
 import getNewToken from '../utils/jwtToken'
 import jwt from 'jsonwebtoken'
 import config from '../config'
+import redisClient from '../utils/redisClient'
 
 const cookieOptions = {
   httpOnly: true,
@@ -172,18 +173,26 @@ interface User {
   id: string
 }
 
-export const refreshToken = asyncHandler(async (req: Request, res: Response) => {
+export const refreshToken = asyncHandler(async (req: Request, res: Response): Promise<void> => {
   console.log('refresh token endpoint hit')
-  if (req.user) {
-    const user = req.user as User
 
-    // Token is issued so it can be shared b/w HTTP and ws server
-    // Todo: Make this temporary and add refresh logic here
+  if (!req.user) {
+    console.log('refresh token Unauthorized')
+    res.status(401).json({ success: false, message: 'Unauthorized' })
+    return
+  }
 
-    const userDb = await prisma.user.findFirst({
-      where: {
-        id: user.id
-      },
+  const user = req.user as User
+  let userData
+
+  const cachedUserData = await redisClient.get(`user_${user.id}`)
+  if (cachedUserData) {
+    console.log('refresh token user cached..')
+    userData = JSON.parse(cachedUserData)
+  } else {
+    console.log('refresh token db called..')
+    userData = await prisma.user.findFirst({
+      where: { id: user.id },
       select: {
         id: true,
         email: true,
@@ -206,10 +215,7 @@ export const refreshToken = asyncHandler(async (req: Request, res: Response) => 
                 postalCode: true,
                 country: true,
                 type: {
-                  select: {
-                    id: true,
-                    name: true
-                  }
+                  select: { id: true, name: true }
                 }
               }
             },
@@ -258,35 +264,20 @@ export const refreshToken = asyncHandler(async (req: Request, res: Response) => 
                         unitWeight: true,
                         unitInStock: true,
                         category: {
-                          select: {
-                            id: true,
-                            name: true,
-                            description: true
-                          }
+                          select: { id: true, name: true, description: true }
                         },
                         supplier: {
-                          select: {
-                            id: true,
-                            companyName: true
-                          }
+                          select: { id: true, companyName: true }
                         }
                       }
                     }
                   }
                 },
                 payment: {
-                  select: {
-                    id: true,
-                    type: true,
-                    allowed: true
-                  }
+                  select: { id: true, type: true, allowed: true }
                 },
                 shipper: {
-                  select: {
-                    id: true,
-                    companyName: true,
-                    phone: true
-                  }
+                  select: { id: true, companyName: true, phone: true }
                 }
               }
             }
@@ -295,14 +286,13 @@ export const refreshToken = asyncHandler(async (req: Request, res: Response) => 
       }
     })
 
-    const token = jwt.sign({ userId: user.id }, config.jwtSecret)
-    res.json({
-      token,
-      ...userDb
-    })
-  } else {
-    res.status(401).json({ success: false, message: 'Unauthorized' })
+    if (userData) {
+      await redisClient.set(`user_${user.id}`, JSON.stringify({ ...userData }))
+    }
   }
+
+  const token = jwt.sign({ userId: user.id }, config.jwtSecret)
+  res.status(200).json({ token, ...userData })
 })
 
 export const loginFailed = asyncHandler((req: Request, res: Response) => {
