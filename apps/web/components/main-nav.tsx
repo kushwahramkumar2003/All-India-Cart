@@ -66,6 +66,7 @@ export function MainNav() {
           {" "}
           <IoMdHeartEmpty size={37} />
         </Link>
+
         <Link href={"/cart"}>
           <IoCartOutline size={37} />
         </Link>

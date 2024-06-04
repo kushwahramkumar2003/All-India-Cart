@@ -9,45 +9,62 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Customer {
-  id                String    @id @default(auto()) @map("_id") @db.ObjectId
-  firstName         String
-  lastName          String
-  class             String
-  room              String
-  building          String
+model User {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  username      String?      @unique
+  name          String?
+  email         String       @unique
+  avatar        String?
+  provider      AuthProvider
+  password      String?
+  createdAt     DateTime     @default(now())
+  lastLogin     DateTime?
+  profile       UserProfile  @relation(fields: [userProfileId], references: [id])
+  userProfileId String       @db.ObjectId
+}
+
+model UserProfile {
+  id                String          @id @default(auto()) @map("_id") @db.ObjectId
+  class             String?
+  room              String?
+  building          String?
   addresses         Address[]
-  phone             String
-  email             String
-  voiceMail         String
-  password          String
-  creditCard        String
-  creditCardType    CreditCardType   @relation(fields: [creditCardTypeID], references: [id], map: "customer_creditCardType")
-  cardExpiration    CardExpiration @relation(fields: [cardExpirationID], references: [id], map: "customer_cardExpiration")
-  // billingAddress   Address   @relation("billingAddress",fields: [billingAddressId], references: [id], map: "customer_billingAddress")
-  // shippingAddress  Address   @relation( "shippingAddress",fields: [shippingAddressId], references: [id], map: "customer_shippingAddress")
-  dateEntered       DateTime
-  dateUpdated       DateTime
-  active            Boolean
-  deleted           Boolean
+  voiceMail         String?
+  creditCard        String?
+  dateEntered       DateTime?
+  dateUpdated       DateTime?
+  active            Boolean         @default(true)
+  deleted           Boolean         @default(false)
   notes             String?
-  creditCardTypeID  String    @db.ObjectId
-  cardExpirationID  String    @db.ObjectId
-  // billingAddressId  String @db.ObjectId
-  // shippingAddressId String @db.ObjectId
+  billingAddressId  String?         @db.ObjectId
+  shippingAddressId String?         @db.ObjectId
+  Order             Order[]
+  createdAt         DateTime        @default(now())
+  User              User[]
+  CreditCardType    CreditCardType? @relation(fields: [creditCardTypeId], references: [id])
+  creditCardTypeId  String?         @db.ObjectId
+  CardExpiration    CardExpiration? @relation(fields: [cardExpirationId], references: [id])
+  cardExpirationId  String?         @db.ObjectId
+}
+
+enum AuthProvider {
+  EMAIL
+  GOOGLE
+  FACEBOOK
+  GITHUB
 }
 
 model Address {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  customer   Customer  @relation(fields: [customerId], references: [id])
-  customerId String    @db.ObjectId
-  street     String
-  city       String
-  state      String
-  postalCode String
-  country    String
-  type       AddressType @relation(fields: [typeId], references: [id])
-  typeId     String    @db.ObjectId
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  street        String
+  city          String
+  state         String
+  postalCode    String
+  country       String
+  type          AddressType  @relation(fields: [typeId], references: [id])
+  typeId        String       @db.ObjectId
+  UserProfile   UserProfile? @relation(fields: [userProfileId], references: [id])
+  userProfileId String?      @db.ObjectId
 }
 
 model AddressType {
@@ -57,53 +74,53 @@ model AddressType {
 }
 
 model CreditCardType {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  customers Customer[]
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  // users       User[]
+  UserProfile UserProfile[]
 }
 
 model CardExpiration {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  month     Int
-  year      Int
-  customers Customer[]
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  month       Int
+  year        Int
+  // users       User[]
+  UserProfile UserProfile[]
 }
 
 model Category {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String
-  picture     String
-  active      Boolean
+  picture     String?
+  active      Boolean   @default(true)
   products    Product[]
 }
 
 model Shipper {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
   companyName String
   phone       String
   orders      Order[]
 }
 
 model Payment {
-  id      String    @id @default(auto()) @map("_id") @db.ObjectId
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
   type    String
   allowed Boolean
   orders  Order[]
 }
 
 model Order {
-  id             String    @id @default(auto()) @map("_id") @db.ObjectId
-  customer       Customer  @relation(fields: [customerId], references: [id])
-  customerId     String    @db.ObjectId
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
   orderNumber    Int
-  payment        Payment   @relation(fields: [paymentId], references: [id])
-  paymentId      String    @db.ObjectId
+  payment        Payment       @relation(fields: [paymentId], references: [id])
+  paymentId      String        @db.ObjectId
   orderDate      DateTime
   shipDate       DateTime
   requiredDate   DateTime
-  shipper        Shipper   @relation(fields: [shipperId], references: [id])
-  shipperId      String    @db.ObjectId
+  shipper        Shipper       @relation(fields: [shipperId], references: [id])
+  shipperId      String        @db.ObjectId
   freight        String
   salesTax       Int
   timestamp      DateTime
@@ -115,14 +132,16 @@ model Order {
   paid           Boolean
   paymentDate    DateTime
   orderDetails   OrderDetail[]
+  UserProfile    UserProfile?  @relation(fields: [userProfileId], references: [id])
+  userProfileId  String?       @db.ObjectId
 }
 
 model OrderDetail {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   order     Order    @relation(fields: [orderId], references: [id])
-  orderId   String @db.ObjectId
-  // product   Product  @relation(fields: [productId], references: [id])
-  productId Int
+  orderId   String   @db.ObjectId
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String   @db.ObjectId
   price     Int
   quantity  Int
   discount  Int
@@ -133,60 +152,77 @@ model OrderDetail {
 }
 
 model Product {
-  id               String @id @default(auto()) @map("_id") @db.ObjectId
-  sku               String
-  vendorProductId   String
-  name              String
-  description       String
-  // supplier          Supplier @relation(fields: [supplierId], references: [id])
-  supplierId        Int
-  category          Category @relation(fields: [categoryId], references: [id])
-  categoryId        String @db.ObjectId
-  quantityPerUnit   Int
-  unitPrice         Int
-  msrp              Int
-  availableSize     Int
-  availableColors   Int
-  size              Int
-  color             Int
-  discount          Int
-  unitWeight        Int
-  unitInStock       Boolean
-  unitsOnOrder      Int
-  reorderLevel      Int
-  productAvailable  Boolean
-  discountAvailable Int
-  currentOrder      Int
-  picture           String
-  ranking           Float
-  notes             String?
+  id               String        @id @default(auto()) @map("_id") @db.ObjectId
+  sku              String        @default(uuid())
+  name             String
+  description      String
+  supplier         Supplier      @relation(fields: [supplierId], references: [id])
+  supplierId       String        @db.ObjectId
+  category         Category      @relation(fields: [categoryId], references: [id])
+  categoryId       String        @db.ObjectId
+  quantityPerUnit  Int
+  unitPrice        Int
+  msrp             Int
+  availableSize    String[]
+  availableColors  String[]
+  size             String
+  color            String
+  discount         Int
+  unitWeight       Int
+  unitInStock      Boolean
+  unitsOnOrder     Int?
+  reorderLevel     Int
+  productAvailable Boolean
+  // discountAvailable Int?
+  currentOrder     Int?
+  picture          String[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  ranking          Float?
+  notes            String?
+  tag              Tags          @default(NEW)
+  OrderDetail      OrderDetail[]
 }
 
 model Supplier {
-  id                String @id @default(auto()) @map("_id") @db.ObjectId
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
   companyName       String
   contactName       String
-  contactTitle      String
-  address           String
-  city              String
-  region            String
-  postalCode        String
-  country           String
+  contactTitle      String?
+  address           String?
+  city              String?
+  region            String?
+  postalCode        String?
+  country           String?
   phone             String
-  fax               String
-  homePage          String
-  email             String
-  url               String
-  paymentMethod     String
-  discountType      String
-  typeGoods         String
-  discountAvailable Int
-  currentOrder      Int
-  picture           String
-  ranking           Float
+  fax               String?
+  homePage          String?
+  email             String    @unique
+  password          String
+  url               String?
+  paymentMethod     String?
+  discountType      String?
+  typeGoods         String?
+  discountAvailable Int?
+  currentOrder      Int?
+  picture           String?
+  ranking           Float?
   notes             String?
-  active            Boolean
-  deleted           Boolean
-  dateCreated       DateTime
-  dateUpdated       DateTime
+  active            Boolean?  @default(false)
+  deleted           Boolean?
+  dateCreated       DateTime  @default(now())
+  dateUpdated       DateTime  @updatedAt
+  Product           Product[]
+}
+
+model Coupon {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  code     String
+  discount Int
+  active   Boolean @default(true)
+}
+
+enum Tags {
+  NEW
+  FEATURED
 }

@@ -18,6 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { ToastAction } from "@/components/ui/toast";
 import { Label } from "@/components/ui/label";
+import { useUser } from "@repo/store";
 
 const ContactSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -42,10 +43,21 @@ const ContactSchema = z.object({
     .min(8, { message: "Your password must have at least 8 characters." }),
 });
 
-export default function Index() {
+function Index() {
+  const { user, loading } = useUser();
+  //@ts-ignore
+  const defaultAddress = user?.profile?.addresses ? "" : "";
   const { toast } = useToast();
   const form = useForm<z.infer<typeof ContactSchema>>({
     resolver: zodResolver(ContactSchema),
+    defaultValues: {
+      email: user ? user?.email : "",
+      firstName: user ? user.name?.split(" ")[0] : "",
+      lastName: user ? user.name?.split(" ")[1] : "",
+      address: user?.profile?.addresses?.[0]
+        ? `${user.profile.addresses[0].street}, ${user.profile.addresses[0].city}, ${user.profile.addresses[0].state}`
+        : "",
+    },
   });
 
   const { isPending, mutate } = useMutation({
@@ -273,3 +285,5 @@ export default function Index() {
     </div>
   );
 }
+
+export default Index;

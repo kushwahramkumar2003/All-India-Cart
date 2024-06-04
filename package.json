@@ -1,5 +1,5 @@
 {
-  "name": "E-Commerce",
+  "name": "All india Cart",
   "private": true,
   "scripts": {
     "build": "turbo build",

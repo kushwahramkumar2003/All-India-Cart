@@ -1,6 +1,9 @@
+"use client";
 import BreadCrumbs from "@/components/reusable/BreadCrumbs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useUser } from "@repo/store";
+import { useEffect } from "react";
 
 const accountBreadCrumbsData = [
   {
@@ -49,13 +52,31 @@ const navigateData = [
     links: [],
   },
 ];
+
 const AccountLayout = ({ children }: React.PropsWithChildren) => {
+  const router = useRouter();
+  const { user, loading } = useUser();
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && !loading && !user) {
+      router.push("/auth/login");
+    }
+  }, [loading, user, router]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!user) {
+    return null; // or a fallback UI
+  }
+
   return (
     <div className={"flex flex-col"}>
       <div className={"flex flex-row justify-between"}>
         <BreadCrumbs breadCrumbsData={accountBreadCrumbsData} />
         <div className={"flex flex-row justify-center items-center"}>
-          Welcome! <span className={"text-primary"}>&nbsp;Ramkumar</span>
+          Welcome! <span className={"text-primary"}>&nbsp;{user.name}</span>
         </div>
       </div>
 
