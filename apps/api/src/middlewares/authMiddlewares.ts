@@ -6,6 +6,7 @@ import config from '../config'
 import { prisma } from '../utils/prisma'
 import asyncHandler from '../utils/asyncHandler'
 import { Supplier } from '@prisma/client'
+import logger from '../utils/logger'
 
 // Rate limit middleware
 export const rateLimitMiddleware = setRateLimit({
@@ -16,9 +17,15 @@ export const rateLimitMiddleware = setRateLimit({
 })
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+  logger.info(req.user)
+  if (req.user) {
+    next()
+  }
   if (!req?.cookies?.token) {
-    console.log('req ', req)
-    console.log('Unauthorized', req?.cookies?.token)
+    // console.log('req ', req)
+    // logger.info(req)
+    // console.log('Unauthorized', req?.cookies?.token)
+    logger.warn('Unauthorized')
     return res.status(401).json({ message: 'Unauthorized' })
   }
   const token = req.cookies.token
@@ -29,6 +36,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     const userId = decodedToken.userId
 
     if (!userId) {
+      logger.warn('Unauthorized')
       return res.status(401).json({ message: 'Unauthorized' })
     }
 
@@ -36,6 +44,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
       where: { id: userId as string }
     })
     if (!user) {
+      logger.warn('Unauthorized')
       return res.status(401).json({ message: 'Unauthorized' })
     }
     //@ts-ignore
@@ -43,6 +52,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     console.log('authMiddleware user --> ', req.body.user)
     next()
   } catch (error) {
+    logger.error('Unauthorized')
     return res.status(401).json({ message: 'Unauthorized' })
   }
 }
