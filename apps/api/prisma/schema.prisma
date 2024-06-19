@@ -21,6 +21,7 @@ model User {
   lastLogin     DateTime?
   profile       UserProfile  @relation(fields: [userProfileId], references: [id])
   userProfileId String       @db.ObjectId
+  cart          Cart?
 }
 
 model UserProfile {
@@ -182,6 +183,7 @@ model Product {
   notes            String?
   tag              Tags          @default(NEW)
   OrderDetail      OrderDetail[]
+  CartItem         CartItem[]
 }
 
 model Supplier {
@@ -225,4 +227,22 @@ model Coupon {
 enum Tags {
   NEW
   FEATURED
+}
+
+model Cart {
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String     @unique @db.ObjectId
+  user       User       @relation(fields: [userId], references: [id])
+  items      CartItem[]
+  totalPrice Float
+  updatedAt  DateTime   @updatedAt
+}
+
+model CartItem {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  cartId    String  @db.ObjectId
+  productId String  @db.ObjectId
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  Cart      Cart    @relation(fields: [cartId], references: [id])
 }

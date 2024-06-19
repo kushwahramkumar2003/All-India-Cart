@@ -4,6 +4,7 @@ const GithubStrategy = require('passport-github2').Strategy
 const FacebookStrategy = require('passport-facebook').Strategy
 import passport from 'passport'
 import dotenv from 'dotenv'
+import { CartItem } from '@prisma/client'
 
 interface GithubEmailRes {
   email: string
@@ -64,7 +65,12 @@ export function initPassport() {
                 name: name,
                 provider: 'GOOGLE',
                 userProfileId: userProfile.id,
-                avatar: profile?._json?.picture
+                avatar: profile?._json?.picture,
+                cart: {
+                  create: {
+                    totalPrice: 0
+                  }
+                }
               }
             })
           } else {

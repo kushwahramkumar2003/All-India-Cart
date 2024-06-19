@@ -5,7 +5,13 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "api-build": "cd apps/api && npm run build",
+    "api-dev": "cd apps/api && npm run dev",
+    "api-lint": "cd apps/api && npm run lint",
+    "api-format": "cd apps/api && npm run format",
+    "api-start": "cd apps/api && npm start",
+    "api-prisma-generate": "cd apps/api && npm prisma-generate"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
