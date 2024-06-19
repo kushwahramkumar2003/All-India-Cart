@@ -9,6 +9,7 @@ import { initPassport } from './utils/passport'
 import session from 'express-session'
 import passport from 'passport'
 import redisClient from './utils/redisClient'
+import logger from './utils/logger'
 
 const app: Express = express()
 
@@ -58,14 +59,18 @@ app.get('/', async (req: Request, res: Response) => {
 })
 
 app.listen(config.port, async () => {
-  console.log(`[server]: Server is running at http://localhost:${config.port}`)
+  // console.log(`[server]: Server is running at http://localhost:${config.port}`)
+  logger.info(`Server is running at http://localhost:${config.port}`)
   try {
-    console.log('Connecting to DB......')
+    logger.info('Connecting to DB......')
+    // console.log('Connecting to DB......')
     await prisma.$connect()
     await redisClient.connect()
-    console.log('DB connected successful.')
+    logger.info('DB connected successful.')
+    // console.log('DB connected successful.')
   } catch (error) {
-    console.error('Error in Connecting to DB ', error)
+    // console.error('Error in Connecting to DB ', error)
+    logger.error('Error in Connecting to DB ', error)
     process.exit(1)
   }
 })

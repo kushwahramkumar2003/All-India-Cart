@@ -21,7 +21,8 @@ const config = {
   COOKIE_SECRET: process.env.COOKIE_SECRET || '998awheifuabskjdbfiuwrb',
   REDIS_PASSWORD: process.env.REDIS_PASSWORD,
   REDIS_PORT: process.env.REDIS_PORT,
-  REDIS_HOST: process.env.REDIS_HOST
+  REDIS_HOST: process.env.REDIS_HOST,
+  REDIS_URL: process.env.REDIS_URL
 }
 
 export default config
