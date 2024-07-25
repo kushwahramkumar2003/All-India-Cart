@@ -1,6 +1,8 @@
-/**  @type {import('next').NextConfig} */
+/** @type {import('next').NextConfig} */
 const nextConfig = {
-  staticPageGenerationTimeout: 300,
+  images: {
+    domains: ['smarttnpstorage.blob.core.windows.net'],
+  },
 };
 
 export default nextConfig;
