@@ -67,7 +67,7 @@ export const authOptions = {
 
 async function ensureUserAndAccount(user, account) {
   try {
-    const providerEnum = account.provider.toUpperCase() as AuthProvider;
+    // const providerEnum = account.provider.toLowerCase() as AuthProvider; // Convert to lower case to match the enum
 
     let userInDb = await db.user.findUnique({
       where: { email: user.email },
@@ -79,7 +79,6 @@ async function ensureUserAndAccount(user, account) {
         data: {
           email: user.email,
           name: user.name,
-          provider: providerEnum, // Use enum
           userProfileId: userProfile.id,
           avatar: user.image,
         },
@@ -89,14 +88,14 @@ async function ensureUserAndAccount(user, account) {
     await db.account.upsert({
       where: {
         provider_providerAccountId: {
-          provider: providerEnum, // Use enum
+          provider: account.provider,
           providerAccountId: account.providerAccountId,
         },
       },
       update: {},
       create: {
         userId: userInDb.id,
-        provider: providerEnum, // Use enum
+        provider: account.provider,
         providerAccountId: account.providerAccountId,
         type: "oauth", // Add this line
       },

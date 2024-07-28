@@ -15,7 +15,7 @@ import axiosClient from '@/services/index';
 
 export const login = async (formData: any) => {
   try {
-    const { data } = await axiosClient.post('/auth/seller/login', formData);
+    const { data } = await axiosClient.post('/auth/login', formData);
     return data;
     //@ts-ignore
   } catch (error: Error) {

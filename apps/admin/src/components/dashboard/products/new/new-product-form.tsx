@@ -18,6 +18,7 @@ import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 
+import constants from '@/constants';
 import { createNewProduct } from '@/services/product';
 import { useMutation } from '@tanstack/react-query';
 import { VscLoading } from 'react-icons/vsc';
@@ -164,6 +165,7 @@ export default function NewProductForm(): React.JSX.Element {
                                   server={{
                                     process: {
                                       url: 'http://localhost:8080/api/v1/product/upload/img',
+                                      // url: `http://localhost:3001/api/product/pictures`,
                                       headers: {
                                         Authorization: `Bearer eyJH18ui0...`,
                                       },

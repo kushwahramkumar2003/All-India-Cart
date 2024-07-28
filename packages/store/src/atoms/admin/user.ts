@@ -19,7 +19,6 @@ export interface Admin {
 }
 export interface AuthState {
   isLoggedIn: boolean;
-
   user: Admin | null;
 }
 

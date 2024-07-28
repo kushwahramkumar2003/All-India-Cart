@@ -8,17 +8,11 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
-
-enum AuthProvider {
-  GITHUB
-  GOOGLE
-}
-
 model Account {
   id                       String  @id @default(auto()) @map("_id") @db.ObjectId
   userId                   String  @db.ObjectId
   type                     String
-  provider                 AuthProvider
+  provider                 String
   providerAccountId        String
   refresh_token            String?
   refresh_token_expires_in Int?

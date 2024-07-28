@@ -12,9 +12,9 @@ import { db } from "@/db";
 import { getSession } from "next-auth/react";
 
 export default async function Index() {
-  const user = await getSession();
-
-  console.log("user --> ", user?.user);
+  // const user = await getSession();
+  //
+  // console.log("user --> ", user?.user);
   let products: Product[] = [];
   try {
     products = (await db.product.findMany({})) as Product[];
