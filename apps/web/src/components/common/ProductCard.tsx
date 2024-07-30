@@ -3,12 +3,18 @@
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { FaRegHeart } from "react-icons/fa";
 import Image from "next/image";
-
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useState } from "react";
 import axiosClient from "../../services";
 import { Button } from "../ui/button";
 import constants from "../../constants";
+import {
+  AddProductToWishlist,
+  RemoveProductToWishlist,
+} from "@/actions/wishlistActions";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface ProductCardProp {
   off?: boolean;
@@ -43,96 +49,156 @@ const ProductCard = ({
   picture,
   id,
 }: ProductCardProp) => {
+  const router = useRouter();
   const [addingToCart, setAddingToCart] = useState<boolean>(false);
-  // console.log("picture", picture);
-  const OnaddToCart = async () => {
+  const session = useSession();
+  const onAddToCart = async () => {
     try {
       setAddingToCart(true);
-      const res = await axiosClient.post("/cart", {
+      const promise = axiosClient.post("/cart", {
         productId: id,
         quantity: 1,
       });
-      setAddingToCart(false);
-      console.log("add to cart res --> ", res.data);
-      //@ts-ignore
-    } catch (e: Error) {
+      toast.promise(promise, {
+        loading: "Adding to cart...",
+        success: (data) => {
+          console.log(data);
+          setAddingToCart(false);
+          return "Product added to cart!";
+        },
+        error: (err) => {
+          console.error(err);
+          return err.message || "Failed to add to cart!";
+        },
+      });
+
+      // console.log("add to cart res --> ", res.data);
+    } catch (e) {
       console.log("Error while adding to cart!!");
       console.error(e);
     }
   };
+
   return (
-    <div className={"flex flex-col gap-4 transition-all duration-300"}>
-      <div className="flex flex-row items-start justify-center gap-4 p-2 bg-gray-100 rounded-sm relative">
+    <div className="flex flex-col gap-4 transition-all duration-300 hover:shadow-lg p-4 bg-white rounded-md transform hover:scale-105">
+      <div className="relative flex items-center justify-center bg-gray-100 rounded-md overflow-hidden">
         {off && (
-          <Button
-            className={
-              "bg-[#DB4444] text-white text-xs -mt-2 hover:bg-red-400 absolute top-0 left-0 h-6 w-12"
-            }
-          >
+          <Button className="bg-red-500 text-white text-xs absolute top-2 left-2 h-6 w-12">
             -40%
           </Button>
         )}
         {newProduct && (
-          <Button
-            className={
-              "bg-green-600 text-white text-xs  hover:bg-green-400 px-1 py-1 h-6 absolute top-0 left-0"
-            }
-          >
+          <Button className="bg-red-500 text-white text-xs absolute top-2 right-2 h-6 px-2">
             New
           </Button>
         )}
-
         <Image
-          // src={constants.images.gamingController}
           src={
             picture && picture.length > 0
               ? picture[0]
               : constants.images.gamingController
           }
-          alt={"alt img"}
-          // layout="responsive"
+          alt="Product image"
           width={300}
           height={300}
-          className="w-64 h-64 mt-8"
+          className="object-cover w-full h-64 transition-transform duration-300 hover:scale-110"
         />
-        {Delete && (
-          <RiDeleteBin6Line
-            className={"hover:text-red-500 hover:cursor-pointer"}
-            size={22}
-          />
-        )}
-        <div className={"flex flex-col top-6 gap-6"}>
-          {wishlist && <FaRegHeart size={21} />}
+        <div className="absolute bottom-4 right-4 flex flex-col gap-2 z-10">
+          {wishlist && (
+            <FaRegHeart
+              onClick={async () => {
+                if (!session) {
+                  toast.error("Please login first to add product to wishlist!");
+                  return;
+                }
+                //@ts-ignore
+                const userId = session.data?.user.id as string;
+                const promise = AddProductToWishlist({
+                  userId,
+                  productId: id,
+                });
+                toast.promise(promise, {
+                  loading: "Adding to wishlist...",
+                  success: (data) => {
+                    console.log(data);
+                    return "Product added to wishlist!";
+                  },
+                  error: (err) => {
+                    console.error(err);
+                    return err.message || "Failed to add to wishlist!";
+                  },
+                });
+              }}
+              size={21}
+              className="hover:text-red-500 hover:cursor-pointer transition duration-300"
+            />
+          )}
           {eye && (
             <MdOutlineRemoveRedEye
               size={25}
-              className={"hover:text-blue-600 hover:cursor-pointer"}
+              className="hover:text-blue-600 hover:cursor-pointer transition duration-300"
+            />
+          )}
+          {Delete && (
+            <RiDeleteBin6Line
+              onClick={async () => {
+                if (!session) {
+                  toast.error(
+                    "Please login first to remove product from wishlist!",
+                  );
+                  return;
+                }
+                //@ts-ignore
+                const userId = session.data?.user.id as string;
+                const promise = RemoveProductToWishlist({
+                  userId,
+                  productId: id,
+                });
+                toast.promise(promise, {
+                  loading: "Removing from wishlist...",
+                  success: (data) => {
+                    console.log(data);
+                    return "Product removed from wishlist!";
+                  },
+                  error: (err) => {
+                    console.error(err);
+                    return err.message || "Failed to remove from wishlist!";
+                  },
+                });
+                router.refresh();
+              }}
+              size={22}
+              className="hover:text-red-500 hover:cursor-pointer transition duration-300"
             />
           )}
         </div>
       </div>
-      <div className={"flex flex-col gap-4"}>
-        <div className={"w-full flex flex-row "}>
-          {buy && <Button className={"w-full"}>Buy now</Button>}
+      <div className="flex flex-col gap-4 mt-4">
+        <div className="flex flex-row w-full gap-2">
+          {buy && (
+            <Button className="w-full bg-red-500 hover:bg-red-600 text-white transition duration-300">
+              Buy now
+            </Button>
+          )}
           {addToCart && (
             <Button
-              onClick={OnaddToCart}
-              className={"w-full "}
+              onClick={onAddToCart}
+              className="w-full bg-red-500 hover:bg-red-600 text-white transition duration-300"
               disabled={addingToCart}
             >
               {addingToCart ? "Adding To Cart..." : "Add To Cart"}
             </Button>
           )}
         </div>
-        <div className={"flex flex-col gap-2"}>
-          <p className={"text-md font-semibold"}>{name}</p>
-          <div className={"flex flex-row gap-4 font-semibold"}>
-            <span className={"text-[#DB4444] "}>₹{unitPrice - discount}</span>
-            <span className={"line-through text-slate-600"}>₹{unitPrice}</span>
+        <div className="flex flex-col gap-2">
+          <p className="text-md font-semibold">{name}</p>
+          <div className="flex flex-row gap-4 font-semibold">
+            <span className="text-red-500">₹{unitPrice - discount}</span>
+            <span className="line-through text-slate-600">₹{unitPrice}</span>
           </div>
           {star && (
-            <div className={"flex flex-row gap-2"}>
-              <span>⭐⭐⭐⭐⭐ </span>
+            <div className="flex flex-row gap-2">
+              <span>⭐⭐⭐⭐⭐</span>
               <span>(75)</span>
             </div>
           )}

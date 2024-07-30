@@ -4,7 +4,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { SessionStrategy } from "next-auth";
 import type { Adapter } from "next-auth/adapters";
 import { db } from "@/db";
-import { AuthProvider } from "@prisma/client";
+import { Account, User } from "@prisma/client";
 
 export const authOptions = {
   adapter: PrismaAdapter(db) as Adapter,
@@ -26,7 +26,15 @@ export const authOptions = {
   },
   session: { strategy: "jwt" as SessionStrategy },
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({
+      user,
+      account,
+      profile,
+    }: {
+      user: any;
+      account: any;
+      profile: any;
+    }) {
       return await ensureUserAndAccount(user, account);
     },
     async jwt({ token, user }: any) {
@@ -65,7 +73,7 @@ export const authOptions = {
   },
 };
 
-async function ensureUserAndAccount(user, account) {
+async function ensureUserAndAccount(user: User | any, account: Account | any) {
   try {
     // const providerEnum = account.provider.toLowerCase() as AuthProvider; // Convert to lower case to match the enum
 

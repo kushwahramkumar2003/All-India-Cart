@@ -5,9 +5,10 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { it } from "node:test";
 
+//@ts-ignore
 const CartProduct = ({ item, updateCart, deleteProduct, deleting }) => {
   const [pending, setPending] = useState(false);
-
+  //@ts-ignore
   const changeQuantity = async (newQuantity) => {
     setPending(true);
     await updateCart(item.product.id, newQuantity);

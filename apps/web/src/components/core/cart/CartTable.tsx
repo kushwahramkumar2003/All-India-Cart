@@ -12,10 +12,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+//@ts-ignore
 export default function CartTable({ initialCart }) {
   const [cart, setCart] = useState(initialCart);
   const [deleting, setDeleting] = useState(false);
 
+  //@ts-ignore
   const updateCart = async (productId, newQuantity) => {
     try {
       const res = await axiosClient.put("/cart", {
@@ -42,6 +44,7 @@ export default function CartTable({ initialCart }) {
 
   const calculateTotalPrice = () => {
     return cart.items.reduce(
+      //@ts-ignore
       (total, item) => total + item.product.unitPrice * item.quantity,
       0,
     );
@@ -61,7 +64,8 @@ export default function CartTable({ initialCart }) {
             </tr>
           </thead>
           <tbody>
-            {cart?.items?.map((item) => (
+            {//@ts-ignore
+            cart?.items?.map((item) => (
               <CartProduct
                 deleting={deleting}
                 key={item.id}

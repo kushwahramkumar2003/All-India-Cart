@@ -15,9 +15,9 @@ const RelatedItem = () => {
       </div>
 
       <div className={"grid md:grid-cols-3 gap-8 mt-12 sm:grid-cols-1 "}>
-        <ProductCard off={true} star={true} />
-        <ProductCard off={true} star={true} addToCart={true} />
-        <ProductCard off={true} star={true} />
+        {/*<ProductCard off={true} star={true} />*/}
+        {/*<ProductCard off={true} star={true} addToCart={true} />*/}
+        {/*<ProductCard off={true} star={true} />*/}
       </div>
     </div>
   );

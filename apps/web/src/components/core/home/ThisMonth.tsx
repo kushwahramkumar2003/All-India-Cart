@@ -1,9 +1,22 @@
-// "use client"
+"use client";
 
 import { Button } from "../../ui/button";
 import ProductCard from "../../common/ProductCard";
+import { Product } from "@repo/types";
+import { useState } from "react";
 
-const ThisMonth = () => {
+const ThisMonth = ({ productArr }: { productArr: Product[] }) => {
+  const [productStateArr, setProductStateArr] = useState<Product[]>(productArr);
+  function getRecentProducts(
+    products: Product[],
+    count: number = 5,
+  ): Product[] {
+    return products
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      .slice(0, count);
+  }
+
+  const products = getRecentProducts(productStateArr);
   return (
     <div className={"flex flex-col"}>
       <div>
@@ -27,13 +40,25 @@ const ThisMonth = () => {
       </div>
       <div
         className={
-          "grid md:grid-cols-4 gap-8 mt-12  xmd:grid-cols-2 sm:grid-cols-1"
+          "grid md:grid-cols-3 gap-8 mt-12  xmd:grid-cols-2 sm:grid-cols-1"
         }
       >
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
+        {products.map((product: Product) => {
+          return (
+            <ProductCard
+              name={product.name}
+              unitPrice={product.unitPrice}
+              discount={product.discount}
+              picture={product.picture}
+              id={product.id}
+              wishlist={true}
+              // newProduct={true}
+              addToCart={true}
+              off={true}
+              star={true}
+            />
+          );
+        })}
       </div>
       <div className="flex flex-row justify-center items-center text-center mt-10"></div>
     </div>

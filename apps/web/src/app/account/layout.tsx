@@ -3,7 +3,7 @@ import BreadCrumbs from "@/components/reusable/BreadCrumbs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUser } from "@repo/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
 const accountBreadCrumbsData = [
@@ -57,7 +57,7 @@ const navigateData = [
 const AccountLayout = ({ children }: React.PropsWithChildren) => {
   const router = useRouter();
   // const { user, loading } = useUser();
-
+  const [loading, setLoading] = useState(true);
   const user = useSession().data?.user;
 
   useEffect(() => {

@@ -1,7 +1,6 @@
 // src/state/cartState.ts
 
 import { atom, selector } from "recoil";
-import axiosClient from "web/services";
 import axios from "axios";
 import { Cart, Product } from "@repo/types";
 

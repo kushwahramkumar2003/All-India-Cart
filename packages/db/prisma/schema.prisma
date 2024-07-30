@@ -45,6 +45,7 @@ model User {
   profile       UserProfile  @relation(fields: [userProfileId], references: [id])
   userProfileId String       @db.ObjectId
   cart          Cart?
+  wishlists Wishlist[]
 }
 
 model Session {
@@ -208,6 +209,16 @@ model Product {
   tag              Tags          @default(NEW)
   OrderDetail      OrderDetail[]
   CartItem         CartItem[]
+  wishlists   Wishlist[]
+}
+
+model Wishlist {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  createdAt DateTime @default(now())
 }
 
 model Supplier {

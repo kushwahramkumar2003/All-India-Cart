@@ -28,9 +28,9 @@ export default async function Index() {
   return (
     <div className="w-full space-y-10">
       <ImageScroller images={constants.images.iphoneImgArr} />
-      <TodaySale />
+      <TodaySale productArr={products} />
       <Categories />
-      <ThisMonth />
+      <ThisMonth productArr={products} />
       <Promotion />
       <OurProducts products={products} />
       <Featured />

@@ -20,6 +20,7 @@ import { ToastAction } from "@/components/ui/toast";
 import { Label } from "@/components/ui/label";
 import { useUser } from "@repo/store";
 import { useSession } from "next-auth/react";
+import useUserDetails from "@/hook/useGetUser";
 
 const ContactSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -48,7 +49,9 @@ function Index() {
   // const { user, loading } = useUser();
   //@ts-ignore
 
-  const user = useSession().data?.user;
+  let [user, loading] = useUserDetails();
+
+  //@ts-ignore
   const defaultAddress = user?.profile?.addresses ? "" : "";
   const { toast } = useToast();
   const form = useForm<z.infer<typeof ContactSchema>>({

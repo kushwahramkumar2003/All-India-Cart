@@ -15,10 +15,9 @@ import {
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { Checkbox } from "../../ui/checkbox";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
 import { Label } from "../../ui/label";
-import { CartProductItem } from "../../../app/cart/page";
 import constants from "../../../constants";
 
 const formSchema = z.object({
@@ -32,7 +31,14 @@ const formSchema = z.object({
   saveInfo: boolean(),
 });
 
-const cartProdData: CartProductItem[] = [
+interface CartItem {
+  prodImg: StaticImageData;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+const cartProdData: CartItem[] = [
   {
     prodImg: constants.images.monitor,
     name: "LCD Monitor",
