@@ -8,18 +8,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { VscLoading } from "react-icons/vsc";
 import { useToast } from "@/components/ui/use-toast";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { ToastAction } from "@/components/ui/toast";
 import { Label } from "@/components/ui/label";
-import { useUser } from "@repo/store";
-import { useSession } from "next-auth/react";
 import useUserDetails from "@/hook/useGetUser";
 
 const ContactSchema = z.object({
@@ -46,6 +41,7 @@ const ContactSchema = z.object({
 });
 
 function Index() {
+  const isPending = false;
   // const { user, loading } = useUser();
   //@ts-ignore
 
@@ -66,45 +62,45 @@ function Index() {
     },
   });
 
-  const { isPending, mutate } = useMutation({
-    mutationFn: async (data: z.infer<typeof ContactSchema>) => {
-      // await signUp(data);
-    },
-    onSuccess: () => {
-      toast({
-        title: "Success",
-        description: "You have successfully signed up!",
-        variant: "default",
-        className: "text-green-500",
-      });
-      form.setValue("firstName", "");
-      form.setValue("email", "");
-      form.setValue("lastName", "");
-      form.setValue("address", "");
-      form.setValue("newPassword", "");
-      form.setValue("confirmPassword", "");
-      form.setValue("currentPassword", "");
-
-      console.log("Success");
-      // navigate("/login");
-    },
-    onError: (error: unknown) => {
-      if (error instanceof Error) {
-        toast({
-          variant: "destructive",
-          title: "Error occurred while signing up.",
-          description: error?.message || "An unknown error occurred.",
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
-        });
-        console.log(error.message);
-      }
-
-      console.log("Error:", error);
-    },
-  });
+  // const { isPending, mutate } = useMutation({
+  //   mutationFn: async (data: z.infer<typeof ContactSchema>) => {
+  //     // await signUp(data);
+  //   },
+  //   onSuccess: () => {
+  //     toast({
+  //       title: "Success",
+  //       description: "You have successfully signed up!",
+  //       variant: "default",
+  //       className: "text-green-500",
+  //     });
+  //     form.setValue("firstName", "");
+  //     form.setValue("email", "");
+  //     form.setValue("lastName", "");
+  //     form.setValue("address", "");
+  //     form.setValue("newPassword", "");
+  //     form.setValue("confirmPassword", "");
+  //     form.setValue("currentPassword", "");
+  //
+  //     console.log("Success");
+  //     // navigate("/login");
+  //   },
+  //   onError: (error: unknown) => {
+  //     if (error instanceof Error) {
+  //       toast({
+  //         variant: "destructive",
+  //         title: "Error occurred while signing up.",
+  //         description: error?.message || "An unknown error occurred.",
+  //         action: <ToastAction altText="Try again">Try again</ToastAction>,
+  //       });
+  //       console.log(error.message);
+  //     }
+  //
+  //     console.log("Error:", error);
+  //   },
+  // });
 
   const onSubmit = (data: z.infer<typeof ContactSchema>) => {
-    mutate(data);
+    // mutate(data);
   };
 
   return (
