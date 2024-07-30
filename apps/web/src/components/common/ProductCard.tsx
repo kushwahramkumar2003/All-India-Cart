@@ -80,8 +80,8 @@ const ProductCard = ({
   };
 
   return (
-    <div className="flex flex-col gap-4 transition-all duration-300 hover:shadow-lg p-4 bg-white rounded-md transform hover:scale-105">
-      <div className="relative flex items-center justify-center bg-gray-100 rounded-md overflow-hidden">
+    <div className=" hover:cursor-pointer flex flex-col gap-4 transition-all duration-300 hover:shadow-lg p-4 bg-white rounded-md transform hover:scale-105">
+      <div className="relative flex items-center justify-center bg-gray-100 rounded-md overflow-hidden ">
         {off && (
           <Button className="bg-red-500 text-white text-xs absolute top-2 left-2 h-6 w-12">
             -40%
@@ -93,6 +93,9 @@ const ProductCard = ({
           </Button>
         )}
         <Image
+          onClick={() => {
+            router.push(`/productdetail/${id}`);
+          }}
           src={
             picture && picture.length > 0
               ? picture[0]
@@ -190,7 +193,12 @@ const ProductCard = ({
             </Button>
           )}
         </div>
-        <div className="flex flex-col gap-2">
+        <div
+          onClick={() => {
+            router.push(`/productdetail/${id}`);
+          }}
+          className="flex flex-col gap-2"
+        >
           <p className="text-md font-semibold">{name}</p>
           <div className="flex flex-row gap-4 font-semibold">
             <span className="text-red-500">₹{unitPrice - discount}</span>

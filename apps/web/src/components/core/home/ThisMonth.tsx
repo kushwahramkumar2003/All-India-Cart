@@ -46,6 +46,7 @@ const ThisMonth = ({ productArr }: { productArr: Product[] }) => {
         {products.map((product: Product) => {
           return (
             <ProductCard
+              key={product.id}
               name={product.name}
               unitPrice={product.unitPrice}
               discount={product.discount}

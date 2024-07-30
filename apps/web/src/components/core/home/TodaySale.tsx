@@ -1,12 +1,47 @@
 "use client";
-
+import React, { useEffect, useState } from "react";
 import { Button } from "../../ui/button";
 import ProductCard from "../../common/ProductCard";
 import { Product } from "@repo/types";
-import { useState } from "react";
+import { Flipper, Flipped } from "react-flip-toolkit";
 
 const TodaySale = ({ productArr }: { productArr: Product[] }) => {
   const [productStateArr, setProductStateArr] = useState<Product[]>(productArr);
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+
+  function calculateTimeLeft() {
+    const now = new Date();
+    const targetDate = new Date();
+    targetDate.setDate(now.getDate() + 4);
+
+    const difference = targetDate.getTime() - now.getTime();
+    let timeLeft = {
+      Days: 0,
+      Hours: 0,
+      Minutes: 0,
+      Seconds: 0,
+    };
+
+    if (difference > 0) {
+      timeLeft = {
+        Days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        Hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        Minutes: Math.floor((difference / 1000 / 60) % 60),
+        Seconds: Math.floor((difference / 1000) % 60),
+      };
+    }
+
+    return timeLeft;
+  }
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   function getRecentProducts(
     products: Product[],
     count: number = 5,
@@ -15,11 +50,12 @@ const TodaySale = ({ productArr }: { productArr: Product[] }) => {
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       .slice(0, count);
   }
+
   const products = getRecentProducts(productStateArr);
   return (
     <div className={"flex flex-col"}>
       <div>
-        <div className={"flex flex-row justify-start  items-center gap-4 mb-4"}>
+        <div className={"flex flex-row justify-start items-center gap-4 mb-4"}>
           <span
             className={"bg-[#DB4444] h-6 w-3 rounded-sm shadow-slate-600"}
           />
@@ -33,25 +69,18 @@ const TodaySale = ({ productArr }: { productArr: Product[] }) => {
                 "flex flex-row gap-4 justify-center items-center text-center"
               }
             >
-              <div>
-                <p className={"text-sm"}>Days</p>
-                <span className={"text-2xl font-semibold"}>03</span>
-              </div>
-              <span className={"text-2xl text-[#DB4444]"}>:</span>
-              <div>
-                <p className={"text-sm"}>Hours</p>
-                <span className={"text-2xl font-semibold"}>23</span>
-              </div>
-              <span className={"text-2xl text-[#DB4444]"}>:</span>
-              <div>
-                <p className={"text-sm"}>Minutes</p>
-                <span className={"text-2xl font-semibold"}>19</span>
-              </div>
-              <span className={"text-2xl text-[#DB4444]"}>:</span>
-              <div>
-                <p className={"text-sm"}>Seconds</p>
-                <span className={"text-2xl font-semibold"}>56</span>
-              </div>
+              {Object.entries(timeLeft).map(([key, value]) => (
+                <div key={key} className="flex flex-col items-center">
+                  <p className={"text-sm"}>{key}</p>
+                  <Flipper flipKey={value}>
+                    <Flipped flipId={key}>
+                      <span className={"text-2xl font-semibold"}>
+                        {value < 10 ? `0${value}` : value}
+                      </span>
+                    </Flipped>
+                  </Flipper>
+                </div>
+              ))}
             </div>
           </div>
           <span className={"text-center items-center flex"}>{"<-  ->"}</span>
@@ -64,6 +93,7 @@ const TodaySale = ({ productArr }: { productArr: Product[] }) => {
         {products.map((product: Product) => {
           return (
             <ProductCard
+              key={product.id}
               name={product.name}
               unitPrice={product.unitPrice}
               discount={product.discount}

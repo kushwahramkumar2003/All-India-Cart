@@ -22,6 +22,9 @@ import controllerImg3 from "@/assets/image 61.png";
 import controllerImg4 from "@/assets/image 59.png";
 import mainControllerImg from "@/assets/image 63.png";
 import signupandloginimage from "@/assets/dl.beatsnoop 1.svg";
+import not_found_1 from "@/assets/not_found_1-1.png";
+import not_found_2 from "@/assets/not_found_2-2.png";
+import not_found_3 from "@/assets/not_found_3-3.png";
 
 export const images = {
   qrcodeImg: qrcodeImg,
@@ -41,6 +44,9 @@ export const images = {
   monitor,
   cartController,
   signupandloginimage,
+  not_found_1,
+  not_found_2,
+  not_found_3,
   controllerArr: [
     controllerImg1,
     controllerImg2,
