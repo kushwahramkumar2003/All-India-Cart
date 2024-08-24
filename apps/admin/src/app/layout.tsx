@@ -2,7 +2,9 @@ import * as React from 'react';
 import type { Viewport } from 'next';
 
 import '@/styles/global.css';
+
 import RecoilRootProvider from '@/app/RecoilRootProvider';
+import { SessionProvider } from 'next-auth/react';
 
 import { UserProvider } from '@/contexts/user-context';
 import { LocalizationProvider } from '@/components/core/localization-provider';
@@ -21,13 +23,14 @@ export default function Layout({ children }: LayoutProps): React.JSX.Element {
     <ReactQueryClientProvider>
       <html lang="en">
         <body>
-          <RecoilRootProvider>
-            <LocalizationProvider>
-              <UserProvider>
-                <ThemeProvider>{children}</ThemeProvider>
-              </UserProvider>
-            </LocalizationProvider>
-          </RecoilRootProvider>
+          {/*<RecoilRootProvider>*/}
+
+          <LocalizationProvider>
+            {/*<UserProvider>*/}
+            <ThemeProvider>{children}</ThemeProvider>
+            {/*</UserProvider>*/}
+          </LocalizationProvider>
+          {/*</RecoilRootProvider>*/}
           <Toaster />
         </body>
       </html>

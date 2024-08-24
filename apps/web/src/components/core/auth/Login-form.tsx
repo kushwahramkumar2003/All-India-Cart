@@ -1,5 +1,6 @@
 "use client";
 import { VscLoading } from "react-icons/vsc";
+import { signIn } from "next-auth/react";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -66,8 +67,14 @@ function LoginForm() {
   //   },
   // });
   //
-  const onSubmit = (data: z.infer<typeof SignUpSchema>) => {
+  const onSubmit = async (data: z.infer<typeof SignUpSchema>) => {
     // mutate(data);
+    // const res = await signIn("credentials", {
+    //   username: data.email,
+    //   password: data.password,
+    //   redirect: false,
+    // });
+    // console.log("res", res);
   };
   return (
     <Form {...form}>

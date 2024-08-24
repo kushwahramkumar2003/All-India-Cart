@@ -226,6 +226,7 @@ model Supplier {
   companyName       String
   contactName       String
   contactTitle      String?
+  token             String?
   address           String?
   city              String?
   region            String?

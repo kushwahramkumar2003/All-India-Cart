@@ -2,7 +2,7 @@ import axiosClient from '@/services/index';
 import axios from 'axios';
 import { z } from 'zod';
 
-import { ProductSchema } from '@/components/dashboard/products/new/new-product-form';
+import { ProductSchema } from '@/types/product';
 
 export const createNewProduct = async (data: z.infer<typeof ProductSchema>) => {
   try {
