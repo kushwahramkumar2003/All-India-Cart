@@ -30,7 +30,7 @@ const schema = zod.object({
 
 type Values = zod.infer<typeof schema>;
 
-const defaultValues: Values = { email: 'info@indianspices.com', password: 'HacksRK2003@' };
+const defaultValues: Values = { email: '', password: '' };
 
 function SignInForm(): React.JSX.Element {
   const { toast } = useToast();
