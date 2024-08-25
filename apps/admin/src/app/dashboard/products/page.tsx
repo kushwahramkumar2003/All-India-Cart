@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/components/ui/use-toast';
 
-export default function Page(): React.JSX.Element {
+export default function Index(): React.JSX.Element {
   const router = useRouter();
   const [search, setSearch] = useState<string>('');
   const [products, setProducts] = useState<Product[] | null>(null);

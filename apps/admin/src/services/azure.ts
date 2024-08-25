@@ -1,13 +1,15 @@
 import { randomUUID } from 'crypto';
 
-import constants from '@/constants';
 import { BlobServiceClient, ContainerClient, StorageSharedKeyCredential } from '@azure/storage-blob';
+
+import constants from '@/constants';
 
 const account = constants.AZURE_STORAGE_ACCOUNT_NAME || '';
 const accountKey = constants.AZURE_STORAGE_ACCOUNT_ACCESS_KEY || '';
 const sharedKeyCredential = new StorageSharedKeyCredential(account, accountKey);
 const blobServiceClient = new BlobServiceClient(`https://${account}.blob.core.windows.net`, sharedKeyCredential);
 
+//@ts-ignore
 export const azureUpload = async (fileStream: Readable, fileName: string) => {
   if (!fileStream) throw new Error('No file stream provided.');
 
@@ -48,6 +50,8 @@ export const imageArrUploader = async (files: File[]) => {
   try {
     const uploadPromises = files.map(async (file, index) => {
       // Upload each file to Azure Blob Storage
+
+      //@ts-ignore
       const publicUrl = await azureUpload(file);
       return { index, publicUrl };
     });

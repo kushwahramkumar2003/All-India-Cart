@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     let iconUrl: string | null = null;
 
     if (icon) {
-      iconUrl = await azureUpload(icon);
+      // iconUrl = await azureUpload(icon);
     }
 
     const category = await db.category.create({

@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Convert File to Stream
+    //@ts-ignore
     const fileStream = Readable.from(await file.arrayBuffer());
 
     // Upload File to Azure

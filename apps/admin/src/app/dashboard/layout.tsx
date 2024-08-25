@@ -3,8 +3,6 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import GlobalStyles from '@mui/material/GlobalStyles';
 
-import { AuthGuard } from '@/components/auth/auth-guard';
-import { ReactQueryClientProvider } from '@/components/core/ReactQueryClientProvider';
 import { MainNav } from '@/components/dashboard/layout/main-nav';
 import { SideNav } from '@/components/dashboard/layout/side-nav';
 
@@ -15,8 +13,6 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps): React.JSX.Element {
   return (
     <>
-      {/*<AuthGuard>*/}
-      {/*  <ReactQueryClientProvider>*/}
       <GlobalStyles
         styles={{
           body: {
@@ -48,8 +44,6 @@ export default function Layout({ children }: LayoutProps): React.JSX.Element {
           </main>
         </Box>
       </Box>
-      {/*  </ReactQueryClientProvider>*/}
-      {/*</AuthGuard>*/}
     </>
   );
 }

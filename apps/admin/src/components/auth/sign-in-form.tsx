@@ -16,10 +16,8 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Eye as EyeIcon } from '@phosphor-icons/react/dist/ssr/Eye';
 import { EyeSlash as EyeSlashIcon } from '@phosphor-icons/react/dist/ssr/EyeSlash';
-import { adminAtom, authStateAtom } from '@repo/store';
 import { signIn } from 'next-auth/react';
 import { Controller, useForm } from 'react-hook-form';
-import { useRecoilState } from 'recoil';
 import { z as zod } from 'zod';
 
 import { paths } from '@/paths';
