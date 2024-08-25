@@ -24,7 +24,7 @@ const uploadFileToS3 = async (file: MulterFileType) => {
   const fileStream = Readable.from(file.buffer);
   const uniqueFileName = `${Date.now()}-${file.originalname}`;
   const s3Params = {
-    Bucket: 'ramkumar.all-india-cart.bucket',
+    Bucket: process.env.S3_BUCKET || '',
     Key: uniqueFileName,
     Body: fileStream,
     ContentType: file.mimetype,
@@ -43,7 +43,7 @@ const deleteFileFromS3 = async (fileKey: string) => {
     return null;
   }
   const deleteParams = {
-    Bucket: 'ramkumar.all-india-cart.bucket',
+    Bucket: process.env.S3_BUCKET || '',
     Key: fileKey,
   };
   await s3Client.send(new DeleteObjectCommand(deleteParams));

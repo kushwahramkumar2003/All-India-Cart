@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { getSession } from "next-auth/react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { Cart } from "@repo/types";
 
 //Get All Products
 export async function GET(request: Request) {
@@ -120,7 +121,9 @@ export async function PUT(request: Request) {
       // return;
     }
 
-    const item = cart.items.find((item) => item.productId === productId);
+    const item = cart.items.find(
+      (item: { id: string; productId: string }) => item.productId === productId,
+    );
 
     if (!item) {
       return Response.json(

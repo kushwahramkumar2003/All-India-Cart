@@ -57,6 +57,17 @@ type ProductData = z.infer<typeof ProductSchema>;
 
 export async function createNewProduct(formData: FormData) {
   try {
+    const session = await getServerSession(authOptions);
+
+    // Check if the user is authenticated
+    if (!session) {
+      return {
+        status: 'error',
+        message: 'Unauthorized. Please log in.',
+        data: null,
+      };
+    }
+
     const data = ProductSchema.parse({
       name: formData.get('name'),
       description: formData.get('description'),
@@ -79,7 +90,7 @@ export async function createNewProduct(formData: FormData) {
     const product = await db.product.create({
       data: {
         ...data,
-        supplierId: '6618e388c995af53f7fff68f',
+        supplierId: session.user.id,
       },
     });
 
