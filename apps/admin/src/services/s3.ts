@@ -34,8 +34,8 @@ const uploadFileToS3 = async (file: MulterFileType) => {
     params: s3Params,
   });
   const uploadResult = await s3Upload.done();
-  console.log('Upload Result:', uploadResult);
-  return uploadResult.Key;
+  // console.log('Upload Result:', uploadResult);
+  return uploadResult;
 };
 
 const deleteFileFromS3 = async (fileKey: string) => {

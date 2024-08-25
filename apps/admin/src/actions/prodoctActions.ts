@@ -31,26 +31,54 @@ const ProductSchema = z.object({
   unitWeight: z.number(),
   reorderLevel: z.number(),
   productAvailable: z.boolean(),
-  pictures: z.array(z.string()).optional(),
+  picture: z.array(z.string()).optional(),
 });
+
+interface CreateProductPayload {
+  name: string;
+  description: string;
+  categoryId: string;
+  quantityPerUnit: number;
+  unitPrice: number;
+  unitInStock: boolean;
+  msrp: number;
+  size: string;
+  color: string;
+  discount: number;
+  unitWeight: number;
+  reorderLevel: number;
+  productAvailable: boolean;
+  availableSize: string[];
+  availableColors: string[];
+  picture: string[];
+}
 
 type ProductData = z.infer<typeof ProductSchema>;
 
-export async function createNewProduct(data: ProductData, files: MulterFileType[]) {
+export async function createNewProduct(formData: FormData) {
   try {
-    const parsedData = ProductSchema.parse(data);
-
-    const uploadedPictures = await Promise.all(
-      files.map(async (file) => {
-        const uploadedKey = await uploadFileToS3(file);
-        return uploadedKey;
-      })
-    );
-
+    const data = ProductSchema.parse({
+      name: formData.get('name'),
+      description: formData.get('description'),
+      categoryId: formData.get('categoryId'),
+      quantityPerUnit: Number(formData.get('quantityPerUnit')),
+      unitPrice: Number(formData.get('unitPrice')),
+      unitInStock: formData.get('unitInStock') === 'true',
+      msrp: Number(formData.get('msrp')),
+      availableSize: formData.getAll('availableSize[]'),
+      availableColors: formData.getAll('availableColors[]'),
+      size: formData.get('size'),
+      color: formData.get('color'),
+      discount: Number(formData.get('discount')),
+      unitWeight: Number(formData.get('unitWeight')),
+      reorderLevel: Number(formData.get('reorderLevel')),
+      productAvailable: formData.get('productAvailable') === 'true',
+      picture: formData.getAll('pictures[]'),
+    });
+    debugger;
     const product = await db.product.create({
       data: {
-        ...parsedData,
-        pictures: uploadedPictures,
+        ...data,
         supplierId: '6618e388c995af53f7fff68f',
       },
     });
@@ -58,7 +86,7 @@ export async function createNewProduct(data: ProductData, files: MulterFileType[
     if (!product) {
       throw new Error('Error in creating new Product.');
     }
-
+    debugger;
     return {
       message: 'Product added successfully.',
       product: product,
@@ -66,6 +94,39 @@ export async function createNewProduct(data: ProductData, files: MulterFileType[
   } catch (err) {
     console.error('Error creating product:', err);
     return { message: 'Error in creating new Product.', error: err };
+  }
+}
+
+export async function uploadFiles(formData: FormData) {
+  try {
+    console.log('here 2');
+    const logoFile = formData.get('logo') as File;
+    const imageFiles = formData.getAll('images[]') as File[];
+
+    // console.log('logoFile', logoFile);
+    // console.log('imageFiles', imageFiles);
+
+    const allFiles = [logoFile, ...imageFiles];
+
+    // Map over all files and upload them to S3
+    const uploadedUrls = await Promise.all(
+      allFiles.map(async (file) => {
+        const multerFile = {
+          originalname: file.name,
+          mimetype: file.type,
+          buffer: Buffer.from(await file.arrayBuffer()), // Convert File to Buffer
+          size: file.size,
+        };
+        const uploadedRes = await uploadFileToS3(multerFile);
+        // console.log('uploadedRes', uploadedRes);
+        return `https://s3.ap-south-1.amazonaws.com/ramkumar.all-india-cart.bucket/${uploadedRes?.Key}`;
+      })
+    );
+    // debugger;
+    return uploadedUrls;
+  } catch (err) {
+    console.error('Error uploading files:', err);
+    throw new Error('File upload failed.');
   }
 }
 
