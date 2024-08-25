@@ -73,7 +73,9 @@ export default function Index({ params }: { params: { productId: string } }) {
           }
         >
           <div
-            className={"flex flex-col gap-4 max-sm:flex-row max-sm:flex-wrap"}
+            className={
+              "flex flex-col gap-4 max-sm:flex-row max-sm:flex-wrap max-h-96 overflow-y-scroll hide-scrollbar max-sm:overflow-x-scroll"
+            }
           >
             {product.picture.map((item, index) => (
               <div
