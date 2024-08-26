@@ -1,9 +1,10 @@
 import React from 'react';
+import { resolveAppleWebApp } from 'next/dist/lib/metadata/resolvers/resolve-basics';
 import { useRouter } from 'next/navigation';
-import { deleteProduct } from '@/services/product';
 import { Product } from '@repo/types';
 import { useMutation } from '@tanstack/react-query';
 
+import { deleteProduct } from '@/actions/prodoctActions';
 import { Button } from '@/components/ui/button';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { useToast } from '@/components/ui/use-toast';
@@ -20,28 +21,34 @@ interface TableRowProp {
 export function TableDataRow({ product, refetch }: { product: Product; refetch: any }): React.JSX.Element {
   const { toast } = useToast();
   const router = useRouter();
+  const [deleting, setDeleting] = React.useState(false);
 
-  const {
-    mutate: deleteHandler,
-    isPending: deleting,
-    error: deleteErr,
-  } = useMutation({
-    mutationFn: async () => {
-      return await deleteProduct({ productId: product.id });
-    },
-    onSuccess: () => {
-      toast({
-        title: 'Product deleted Successfully!!!',
-      });
-      refetch();
-    },
-    onError: () => {
+  const deleteHandler = async () => {
+    setDeleting(true);
+    try {
+      const res = await deleteProduct({ id: product.id });
+
+      if (res.status === 'success') {
+        toast({
+          title: res.message,
+        });
+        refetch();
+      } else {
+        toast({
+          title: res.message,
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.log(error);
       toast({
         title: 'Error in deleting product!!!',
         variant: 'destructive',
       });
-    },
-  });
+    } finally {
+      setDeleting(false);
+    }
+  };
   const editHandler = () => {
     router.push(`/dashboard/products/edit/${product.id}`);
   };

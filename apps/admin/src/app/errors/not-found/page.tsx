@@ -12,7 +12,7 @@ import { ArrowLeft as ArrowLeftIcon } from '@phosphor-icons/react/dist/ssr/Arrow
 import { config } from '@/config';
 import { paths } from '@/paths';
 
-// export const metadata = { title: `Not found | Errors | ${config.site.name}` } satisfies Metadata;
+// export const metadata = { title: `Not found | Errors | ${constants.site.name}` } satisfies Metadata;
 
 export default function NotFound(): React.JSX.Element {
   return (

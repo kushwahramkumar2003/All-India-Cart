@@ -1,6 +1,5 @@
+import config from '@/constants/index';
 import axios from 'axios';
-
-import config from '@/config/index';
 
 axios.defaults.baseURL = config.baseUrl;
 axios.defaults.withCredentials = true;

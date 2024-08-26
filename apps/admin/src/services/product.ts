@@ -2,7 +2,7 @@ import axiosClient from '@/services/index';
 import axios from 'axios';
 import { z } from 'zod';
 
-import { ProductSchema } from '@/components/dashboard/products/new/new-product-form';
+import { ProductSchema } from '@/types/product';
 
 export const createNewProduct = async (data: z.infer<typeof ProductSchema>) => {
   try {
@@ -25,7 +25,7 @@ export const createNewProduct = async (data: z.infer<typeof ProductSchema>) => {
 
 export const getAllSupplireProducts = async ({ query }: { query: string }) => {
   try {
-    const response = await axiosClient.get(`/product/supplier?name=${query}`);
+    const response = await axiosClient.get(`/product?name=${query}`);
     return response.data.products;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {

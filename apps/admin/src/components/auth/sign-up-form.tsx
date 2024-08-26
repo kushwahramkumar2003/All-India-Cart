@@ -15,12 +15,11 @@ import Link from '@mui/material/Link';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { useSession } from 'next-auth/react';
 import { Controller, useForm } from 'react-hook-form';
 import { z as zod } from 'zod';
 
 import { paths } from '@/paths';
-import { authClient } from '@/lib/auth/client';
-import { useUser } from '@/hooks/use-user';
 
 const schema = zod.object({
   firstName: zod.string().min(1, { message: 'First name is required' }),
@@ -37,7 +36,7 @@ const defaultValues = { firstName: '', lastName: '', email: '', password: '', te
 export function SignUpForm(): React.JSX.Element {
   const router = useRouter();
 
-  const { checkSession } = useUser();
+  const session = useSession();
 
   const [isPending, setIsPending] = React.useState<boolean>(false);
 
