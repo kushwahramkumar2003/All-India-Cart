@@ -2,6 +2,7 @@
 
 import { RecoilRoot } from "recoil";
 import { SessionProvider } from "next-auth/react";
+import WalletProvider from "./WalletProvider";
 const Providers = ({
   children,
 }: Readonly<{
@@ -10,9 +11,11 @@ const Providers = ({
   return (
     <RecoilRoot>
       <SessionProvider>
+        <WalletProvider>
         {/*<NextThemesProvider attribute="class" defaultTheme="system">*/}
         {children}
         {/*</NextThemesProvider>*/}
+        </WalletProvider>
       </SessionProvider>
     </RecoilRoot>
   );

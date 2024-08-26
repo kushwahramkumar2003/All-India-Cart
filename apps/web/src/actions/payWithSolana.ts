@@ -20,22 +20,28 @@ export async function payWithSolana(data: {
   payer: string; // Pass the payer's public key from the client side
 }): Promise<SAPayload> {
   try {
-    const { recipient, amount, payer } = data;
+    console.log("data", data);
+    const { recipient, amount } = data;
     const recipientPublicKey = new PublicKey(recipient);
-    const payerPublicKey = new PublicKey(payer);
-
+    const payerPublicKey = new PublicKey(
+      "FxfMxvBecat982M1DpeCwqWRRc4gk35UZH5bhaFqVoDX"
+    );
     const transaction = new Transaction().add(
       SystemProgram.transfer({
-        fromPubkey: payerPublicKey,
+        fromPubkey: recipientPublicKey,
         toPubkey: recipientPublicKey,
         lamports: amount * 1000000000, // 1 SOL = 1 billion lamports
       })
     );
 
-    const { blockhash } = await connection.getRecentBlockhash();
+    console.log("transaction", transaction);
+
+    // Fetch the latest blockhash instead of the deprecated recent blockhash
+    const { blockhash } = await connection.getLatestBlockhash();
     transaction.recentBlockhash = blockhash;
     transaction.feePayer = payerPublicKey;
 
+    // Serialize the transaction for client-side signing
     const serializedTransaction = transaction.serialize({
       requireAllSignatures: false,
     });
@@ -44,6 +50,7 @@ export async function payWithSolana(data: {
       status: "success",
       message: "Transaction created successfully",
       data: {
+        // transaction: serializedTransaction.toString("base64"),
         transaction: serializedTransaction.toString("base64"),
       },
     };

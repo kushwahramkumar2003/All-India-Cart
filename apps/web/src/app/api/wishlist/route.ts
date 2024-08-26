@@ -28,4 +28,5 @@ export async function POST(req: NextRequest) {
   //   userId,
   //   productId,
   // });
+  return Response.json({ message: "Session not found!" }, { status: 404 });
 }

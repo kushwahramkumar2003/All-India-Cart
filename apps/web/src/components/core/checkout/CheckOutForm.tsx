@@ -18,6 +18,10 @@ import Image from "next/image";
 import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
 import { Label } from "../../ui/label";
 import { Product } from "@repo/types";
+import { useEffect, useState } from "react";
+import { payWithSolana } from "@/actions/payWithSolana";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { Connection, Transaction } from "@solana/web3.js";
 
 const formSchema = z.object({
   firstName: z.string(),
@@ -52,6 +56,7 @@ const formSchema = z.object({
 //   },
 // ];
 const CheckOutForm = ({ product }: { product: Product }) => {
+  // const { publicKey, signTransaction } = useWallet();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -70,6 +75,80 @@ const CheckOutForm = ({ product }: { product: Product }) => {
     // ✅ This will be type-safe and validated.
     console.log(values);
   }
+
+  // const handlePayment = useCallback(async () => {
+  //   debugger;
+  //   if (!publicKey) {
+  //     alert("Connect your wallet first!");
+  //     return;
+  //   }
+
+  //   debugger;
+  //   const transaction = await payWithSolana({
+  //     recipient: "9KP44gv69EoXN2aB71u1HoYy5ZSZjXTpyYXygJ9phwCN", // Replace with merchant's wallet public key
+  //     amount: product.unitPrice, // Payment amount in SOL
+  //     payer: "",
+  //   });
+  //   debugger;
+  //   if (transaction) {
+  //     try {
+  //       const signedTransaction = await signTransaction(transaction);
+  //       const serializedTransaction = signedTransaction.serialize();
+  //       debugger;
+  //       // Send this serialized transaction to the server or broadcast it
+  //       // For simplicity, we're logging it to the console
+  //       console.log("Serialized Transaction: ", serializedTransaction);
+  //     } catch (error) {
+  //       console.error("Transaction signing failed", error);
+  //     }
+  //   }
+  // }, [publicKey, signTransaction, product.unitPrice]);
+
+  const { publicKey, sendTransaction, signTransaction, connect } = useWallet();
+  const [transaction, setTransaction] = useState<Transaction | null>(null);
+
+  useEffect(() => {
+    if (publicKey && transaction) {
+      handlePayment();
+    }
+  }, [publicKey, transaction]);
+
+  const handlePrepareTransaction = async () => {
+    const response = await payWithSolana({
+      recipient: "9KP44gv69EoXN2aB71u1HoYy5ZSZjXTpyYXygJ9phwCN", // Replace with actual recipient
+      amount: 1, // Amount in SOL
+      payer: "",
+    });
+
+    if (response.status === "success") {
+      const txn = Transaction.from(
+        Buffer.from(response.data.transaction, "base64")
+      );
+      setTransaction(txn);
+      connect(); // Prompt wallet connection
+    } else {
+      console.error("Failed to prepare transaction:", response.message);
+    }
+  };
+
+  const handlePayment = async () => {
+    if (!publicKey || !transaction) return;
+
+    try {
+      //@ts-ignore
+      const signedTransaction = await signTransaction(transaction);
+
+      const connection = new Connection("https://api.devnet.solana.com");
+
+      const signature = await sendTransaction(signedTransaction, connection);
+
+      await connection.confirmTransaction(signature, "finalized");
+
+      console.log("Transaction successful:", signature);
+    } catch (error) {
+      console.error("Transaction failed:", error);
+    }
+  };
 
   // const form = useForm()
   return (
@@ -250,7 +329,9 @@ const CheckOutForm = ({ product }: { product: Product }) => {
             <Button>Apply Coupon</Button>
           </div>
 
-          <Button className={"mt-4"}>Place Order</Button>
+          <Button className={"mt-4"} onClick={handlePrepareTransaction}>
+            Place Order
+          </Button>
         </div>
       </div>
     </div>

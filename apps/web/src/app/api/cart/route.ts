@@ -5,7 +5,7 @@ import { authOptions } from "@/lib/auth";
 
 //Get All Products
 //eslint-disable-next-line
-export async function GET(request: Request) {
+export async function GET(request: Request): Promise<Response> {
   const session = await getServerSession(authOptions);
   if (!session) {
     return Response.json({ message: "Session not found!" }, { status: 404 });
@@ -20,7 +20,7 @@ export async function GET(request: Request) {
 }
 
 //Add new product in cart
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<Response> {
   const session = await getServerSession(authOptions);
   if (!session) {
     return Response.json({ message: "Session not found!" }, { status: 404 });
@@ -49,8 +49,7 @@ export async function POST(request: Request) {
   const product = await db.product.findUnique({ where: { id: productId } });
   if (!product) {
     // res.status(404).json({ message: "Product not found!" });
-    Response.json({ message: "Product not found!" }, { status: 404 });
-    return; // Ensure function exits after sending the response
+    return Response.json({ message: "Product not found!" }, { status: 404 });
   }
 
   const itemPrice = product.unitPrice * quantity;
@@ -93,7 +92,7 @@ export async function POST(request: Request) {
 }
 
 //Update Cart
-export async function PUT(request: Request) {
+export async function PUT(request: Request): Promise<Response> {
   const session = await getServerSession(authOptions);
   if (!session) {
     return Response.json({ message: "Session not found!" }, { status: 404 });
@@ -113,8 +112,6 @@ export async function PUT(request: Request) {
 
     if (!cart) {
       return Response.json({ error: "Cart not found!" }, { status: 404 });
-      // res.status(404).json({ error: "Cart not found" });
-      // return;
     }
 
     const item = cart.items.find(
@@ -126,8 +123,6 @@ export async function PUT(request: Request) {
         { error: "Item not found in the cart" },
         { status: 404 }
       );
-      // res.status(404).json({ error: "Item not found in the cart" });
-      // return;
     }
 
     const product = await db.product.findUnique({
@@ -136,8 +131,6 @@ export async function PUT(request: Request) {
 
     if (!product) {
       return Response.json({ error: "Product not found" }, { status: 404 });
-      // res.status(404).json({ error: "Product not found" });
-      // return;
     }
 
     const itemPriceDifference = product.unitPrice * (quantity - item.quantity);
@@ -155,7 +148,7 @@ export async function PUT(request: Request) {
         },
         updatedAt: new Date(),
       },
-      // include: { items: true },
+
       select: {
         totalPrice: true,
         items: {
@@ -210,22 +203,19 @@ export async function PUT(request: Request) {
     console.log("Error while updating cart", error);
     if (error instanceof z.ZodError) {
       return Response.json({ error: error.errors }, { status: 400 });
-      // res.status(400).json({ error: error.errors });
     } else {
       return Response.json({ error: "Internal server error" }, { status: 500 });
-      // res.status(500).json({ error: "Internal server error" });
     }
   }
-
-  // return Response.json({});
 }
 
 //Delete product from cart
-export async function DELETE(request: Request) {
+export async function DELETE(request: Request): Promise<Response> {
   const session = await getServerSession(authOptions);
   if (!session) {
     return Response.json({ message: "Session not found!" }, { status: 404 });
   }
+
   //@ts-ignore
   const userId = session?.user.id as string;
 
@@ -238,12 +228,11 @@ export async function DELETE(request: Request) {
     });
 
     if (!cart) {
-      // res.status(404).json({ error: "Cart not found" });
       return Response.json({ error: "Cart not found" }, { status: 404 });
-      // return;
     }
 
-    const itemIndex = cart.items.findIndex(
+    const itemIndex: number = cart.items.findIndex(
+      //@ts-ignore
       (item) => item.productId === productId
     );
 
@@ -252,8 +241,6 @@ export async function DELETE(request: Request) {
         { error: "Item not found in the cart" },
         { status: 404 }
       );
-      // res.status(404).json({ error: "Item not found in the cart" });
-      // return;
     }
 
     const item = cart.items[itemIndex];
@@ -264,10 +251,9 @@ export async function DELETE(request: Request) {
 
     if (!product) {
       return Response.json({ error: "Product not found" }, { status: 404 });
-      // res.status(404).json({ error: "Product not found" });
-      // return;
     }
 
+    //@ts-ignore
     const itemPrice = product.unitPrice * item.quantity;
 
     await db.cartItem.delete({
@@ -331,14 +317,11 @@ export async function DELETE(request: Request) {
       },
     });
     return Response.json({ cart: updatedCart }, { status: 200 });
-    // res.json(updatedCart);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return Response.json({ error: error.errors }, { status: 500 });
-      // res.status(400).json({ error: error.errors });
     } else {
       return Response.json({ error: "Internal server error" }, { status: 500 });
-      // res.status(500).json({ error: "Internal server error" });
     }
   }
 }

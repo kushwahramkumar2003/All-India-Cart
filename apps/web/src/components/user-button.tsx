@@ -14,6 +14,7 @@ import Link from "next/link";
 import { FaRegUser } from "react-icons/fa6";
 
 import { signOut, useSession } from "next-auth/react";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
 export default function UserButton() {
   // const { toast } = useToast();
@@ -81,6 +82,24 @@ export default function UserButton() {
             </p>
           </div>
         </DropdownMenuLabel>
+        <DropdownMenuItem>
+          <div className="flex justify-center items-center text-center">
+            <WalletMultiButton
+              className="bg-transparent text-primary hover:bg-transparent hover:text-primary p-0"
+              style={{
+                backgroundColor: "transparent",
+                color: "#e11d48",
+                fontSize: "inherit",
+                padding: "0",
+                textAlign: "center",
+
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            />
+          </div>
+        </DropdownMenuItem>
         <DropdownMenuItem
           className={"flex justify-center items-center flex-col"}
         >
