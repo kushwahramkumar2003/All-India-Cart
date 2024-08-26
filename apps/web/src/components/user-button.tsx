@@ -10,11 +10,9 @@ import {
 } from "./ui/dropdown-menu";
 // import { SignIn, SignOut } from "./auth-components";
 import Link from "next/link";
-import { useUser } from "@repo/store";
+
 import { FaRegUser } from "react-icons/fa6";
-import { useRouter } from "next/navigation";
-import axios from "axios";
-import { useToast } from "./ui/use-toast";
+
 import { signOut, useSession } from "next-auth/react";
 
 export default function UserButton() {

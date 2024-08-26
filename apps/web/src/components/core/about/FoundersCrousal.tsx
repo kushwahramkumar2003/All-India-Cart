@@ -43,7 +43,7 @@ const FoundersCrousal = () => {
       ]}
     >
       <CarouselContent className="-ml-1">
-        {aboutSectionPersons.map((item, index) => {
+        {aboutSectionPersons.map((item) => {
           return (
             <CarouselItem
               key={item.name}

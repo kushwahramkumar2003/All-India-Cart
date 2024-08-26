@@ -73,7 +73,7 @@ export default function Index() {
           "grid grid-cols-4 gap-3 max-md:grid-cols-2 max-sm:grid-cols-1"
         }
       >
-        {aboutSectionBenifits.map((item, i) => {
+        {aboutSectionBenifits.map((item) => {
           return (
             <div
               className={

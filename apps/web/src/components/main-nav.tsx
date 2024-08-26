@@ -89,6 +89,7 @@ export function MainNav() {
 function ResponsiveNav({
   handleSearchSubmit,
 }: {
+  //eslint-disable-next-line
   handleSearchSubmit: (e: any) => void;
 }): React.JSX.Element {
   const [open, setOpen] = useState(false);

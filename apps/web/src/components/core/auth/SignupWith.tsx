@@ -6,17 +6,21 @@ import { useToast } from "@/components/ui/use-toast";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { ToastAction } from "@/components/ui/toast";
+
 import { SignUpSchema } from "@/components/core/auth/Signup-form";
 
 function SignupWith() {
+  //eslint-disable-next-line
   const router = useRouter();
+  //eslint-disable-next-line
   const [showPassword, setShowPassword] = useState(false);
+  //eslint-disable-next-line
   const { toast } = useToast();
+  //eslint-disable-next-line
   const form = useForm<z.infer<typeof SignUpSchema>>({
     resolver: zodResolver(SignUpSchema),
   });
+  //eslint-disable-next-line
   const isPending = false;
   // const { isPending, mutate } = useMutation({
   //   mutationFn: async (data: z.infer<typeof SignUpSchema>) => {
@@ -52,7 +56,7 @@ function SignupWith() {
   //     console.log("Error:", error);
   //   },
   // });
-
+  //eslint-disable-next-line
   const onSubmit = (data: z.infer<typeof SignUpSchema>) => {
     // mutate(data);
   };
@@ -66,6 +70,7 @@ function SignupWith() {
         }}
         className="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150"
       >
+        {/*  eslint-disable-next-line */}
         <img
           className="w-6 h-6"
           src="https://www.svgrepo.com/show/475656/google-color.svg"

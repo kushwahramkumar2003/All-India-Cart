@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,10 +14,10 @@ import {
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { Checkbox } from "../../ui/checkbox";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
 import { Label } from "../../ui/label";
-import constants from "../../../constants";
+import { Product } from "@repo/types";
 
 const formSchema = z.object({
   firstName: z.string(),
@@ -31,28 +30,28 @@ const formSchema = z.object({
   saveInfo: boolean(),
 });
 
-interface CartItem {
-  prodImg: StaticImageData;
-  name: string;
-  price: number;
-  quantity: number;
-}
+// interface CartItem {
+//   prodImg: StaticImageData;
+//   name: string;
+//   price: number;
+//   quantity: number;
+// }
 
-const cartProdData: CartItem[] = [
-  {
-    prodImg: constants.images.monitor,
-    name: "LCD Monitor",
-    price: 650,
-    quantity: 1,
-  },
-  {
-    prodImg: constants.images.cartController,
-    name: "H1 Gamepad",
-    price: 550,
-    quantity: 2,
-  },
-];
-const CheckOutForm = () => {
+// const cartProdData: CartItem[] = [
+//   {
+//     prodImg: constants.images.monitor,
+//     name: "LCD Monitor",
+//     price: 650,
+//     quantity: 1,
+//   },
+//   {
+//     prodImg: constants.images.cartController,
+//     name: "H1 Gamepad",
+//     price: 550,
+//     quantity: 2,
+//   },
+// ];
+const CheckOutForm = ({ product }: { product: Product }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -71,6 +70,7 @@ const CheckOutForm = () => {
     // ✅ This will be type-safe and validated.
     console.log(values);
   }
+
   // const form = useForm()
   return (
     <div className={"grid grid-cols-2 max-md:gap-6 max-md:grid-cols-1 gap-8"}>
@@ -189,7 +189,7 @@ const CheckOutForm = () => {
       </div>
       <div>
         <div className={"flex flex-col gap-4"}>
-          {cartProdData.map((cartProdDatum) => (
+          {/* {cartProdData.map((cartProdDatum) => (
             <div className={"flex flex-row justify-between items-center"}>
               <div className={"flex flex-row gap-1"}>
                 <Image
@@ -200,7 +200,19 @@ const CheckOutForm = () => {
               </div>
               <p>${cartProdDatum.price}</p>
             </div>
-          ))}
+          ))} */}
+          <div className={"flex flex-row justify-between items-center"}>
+            <div className={"flex flex-row gap-1"}>
+              <Image
+                src={product.picture[0]}
+                alt={product.name}
+                width={50}
+                height={50}
+              />
+              <p>{product.name}</p>
+            </div>
+            <p>₹{product.unitPrice}</p>
+          </div>
         </div>
         <div
           className={
@@ -209,7 +221,7 @@ const CheckOutForm = () => {
         >
           <div className={"flex flex-row justify-between"}>
             <p>Subtotal:</p>
-            <p>$1750</p>
+            <p>₹{product.unitPrice}</p>
           </div>
           <span className={"w-full h-[1px] bg-gray-400"} />
           <div className={"flex flex-row justify-between"}>
@@ -219,7 +231,7 @@ const CheckOutForm = () => {
           <span className={"w-full h-[1px] bg-gray-400"} />
           <div className={"flex flex-row justify-between"}>
             <p>Total:</p>
-            <p>$1750</p>
+            <p>₹{product.unitPrice}</p>
           </div>
         </div>
         <RadioGroup defaultValue="bank" className={"mt-6 flex flex-col gap-3"}>

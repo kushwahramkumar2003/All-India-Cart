@@ -54,7 +54,7 @@ export async function RemoveProductToWishlist(props: any) {
     throw new Error(validatedFields.error.errors[0].message);
   }
 
-  const res = await db.wishlist.deleteMany({
+  await db.wishlist.deleteMany({
     where: {
       productId: props.productId,
       userId: props.userId,

@@ -43,9 +43,10 @@ const Promotion = () => {
     return () => clearInterval(timer);
   }, [targetDate]);
 
+  //eslint-disable-next-line
   const decreaseTimer = (
     amount: number,
-    unit: "Days" | "Hours" | "Minutes" | "Seconds",
+    unit: "Days" | "Hours" | "Minutes" | "Seconds"
   ) => {
     const newTargetDate = new Date(targetDate);
     if (unit === "Days") {

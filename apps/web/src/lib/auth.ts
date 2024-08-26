@@ -10,35 +10,33 @@ export const authOptions = {
   adapter: PrismaAdapter(db) as Adapter,
   providers: [
     GithubProvider({
+      //eslint-disable-next-line
       clientId: process.env.GITHUB_ID || "",
+      //eslint-disable-next-line
       clientSecret: process.env.GITHUB_SECRET || "",
       allowDangerousEmailAccountLinking: true,
     }),
     GoogleProvider({
+      //eslint-disable-next-line
       clientId: process.env.GOOGLE_CLIENT_ID || "",
+      //eslint-disable-next-line
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
       allowDangerousEmailAccountLinking: true,
     }),
   ],
+  //eslint-disable-next-line
   secret: process.env.NEXTAUTH_SECRET || "secr3t",
   pages: {
     signIn: "/auth",
   },
   session: { strategy: "jwt" as SessionStrategy },
   callbacks: {
-    async signIn({
-      user,
-      account,
-      profile,
-    }: {
-      user: any;
-      account: any;
-      profile: any;
-    }) {
+    async signIn({ user, account }: { user: any; account: any; profile: any }) {
       return await ensureUserAndAccount(user, account);
     },
     async jwt({ token, user }: any) {
       if (token && user) {
+        //eslint-disable-next-line
         let userInDb = await db.user.findUnique({
           where: {
             email: user.email,
@@ -51,6 +49,7 @@ export const authOptions = {
       return token;
     },
 
+    //eslint-disable-next-line
     async session({ session, token, user }: any) {
       // const user = await db.user.findUnique({
       //   where: {

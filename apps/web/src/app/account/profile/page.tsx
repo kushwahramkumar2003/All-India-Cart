@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { VscLoading } from "react-icons/vsc";
-import { useToast } from "@/components/ui/use-toast";
+
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -42,22 +42,18 @@ const ContactSchema = z.object({
 
 function Index() {
   const isPending = false;
-  // const { user, loading } = useUser();
-  //@ts-ignore
+  let { user } = useUserDetails();
 
-  let [user, loading] = useUserDetails();
-
-  //@ts-ignore
-  const defaultAddress = user?.profile?.addresses ? "" : "";
-  const { toast } = useToast();
   const form = useForm<z.infer<typeof ContactSchema>>({
     resolver: zodResolver(ContactSchema),
     defaultValues: {
       email: user ? user?.email : "",
       firstName: user ? user.name?.split(" ")[0] : "",
       lastName: user ? user.name?.split(" ")[1] : "",
+      //@ts-ignore
       address: user?.profile?.addresses?.[0]
-        ? `${user.profile.addresses[0].street}, ${user.profile.addresses[0].city}, ${user.profile.addresses[0].state}`
+        ? //@ts-ignore
+          `${user.profile.addresses[0].street}, ${user.profile.addresses[0].city}, ${user.profile.addresses[0].state}`
         : "",
     },
   });
@@ -99,6 +95,7 @@ function Index() {
   //   },
   // });
 
+  //eslint-disable-next-line
   const onSubmit = (data: z.infer<typeof ContactSchema>) => {
     // mutate(data);
   };

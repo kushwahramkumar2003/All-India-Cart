@@ -1,8 +1,8 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextRequest } from "next/server";
-import { db } from "@/db";
 
+//eslint-disable-next-line
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) {

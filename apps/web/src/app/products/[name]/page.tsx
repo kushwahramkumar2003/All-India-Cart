@@ -1,8 +1,5 @@
-import BreadCrumbs from "@/components/reusable/BreadCrumbs";
-import CheckOutForm from "@/components/core/checkout/CheckOutForm";
 import { db } from "@/db";
 import ProdCard from "@/components/core/products/ProdCard";
-import { ProdctCardSkeleton } from "@/components/core/products/ProdctCardSkeleton";
 import Image from "next/image";
 import constants from "@/constants";
 

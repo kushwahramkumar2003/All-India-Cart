@@ -31,6 +31,7 @@ interface ProductCardProp {
   discount: number;
   picture: string[];
   id: string;
+  className?: string;
 }
 
 const ProductCard = ({
@@ -40,6 +41,7 @@ const ProductCard = ({
   star = false,
   eye = false,
   wishlist = false,
+  //eslint-disable-next-line
   colors = false,
   buy = false,
   addToCart = false,
@@ -48,6 +50,7 @@ const ProductCard = ({
   discount,
   picture,
   id,
+  className,
 }: ProductCardProp) => {
   const router = useRouter();
   const [addingToCart, setAddingToCart] = useState<boolean>(false);
@@ -80,7 +83,9 @@ const ProductCard = ({
   };
 
   return (
-    <div className=" hover:cursor-pointer flex flex-col gap-4 transition-all duration-300 hover:shadow-lg p-4 bg-white rounded-md transform hover:scale-105">
+    <div
+      className={` hover:cursor-pointer flex flex-col gap-4 transition-all duration-300 hover:shadow-lg p-4 bg-white rounded-md transform hover:scale-105 ${className}`}
+    >
       <div className="relative flex items-center justify-center bg-gray-100 rounded-md overflow-hidden ">
         {off && (
           <Button className="bg-red-500 text-white text-xs absolute top-2 left-2 h-6 w-12">
@@ -147,7 +152,7 @@ const ProductCard = ({
               onClick={async () => {
                 if (!session) {
                   toast.error(
-                    "Please login first to remove product from wishlist!",
+                    "Please login first to remove product from wishlist!"
                   );
                   return;
                 }

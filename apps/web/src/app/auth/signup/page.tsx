@@ -3,7 +3,6 @@ import constants from "@/constants";
 import SignUpForm from "@/components/core/auth/Signup-form";
 import Link from "next/link";
 import SignupWith from "@/components/core/auth/SignupWith";
-import SigninWith from "@/components/core/auth/SigninWith";
 
 function Signup() {
   return (

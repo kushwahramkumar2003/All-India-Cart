@@ -1,6 +1,5 @@
 "use client";
 import BreadCrumbs from "@/components/reusable/BreadCrumbs";
-import constants from "@/constants";
 import Image from "next/image";
 import { FaRegHeart } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
@@ -8,15 +7,12 @@ import Link from "next/link";
 import { TbTruckDelivery } from "react-icons/tb";
 import { TbRefresh } from "react-icons/tb";
 import RelatedItem from "@/components/core/productPage/RelatedItem";
-import useUserDetails from "@/hook/useGetUser";
 import { useEffect, useState } from "react";
 import { Product } from "@prisma/client";
-import { GetUserDetails } from "@/actions/accountActions";
 import {
   AddWishListOrRemove,
   GetProductDetail,
 } from "@/actions/productActions";
-import { bgBlack } from "next/dist/lib/picocolors";
 import { FaHeart } from "react-icons/fa";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
@@ -120,7 +116,7 @@ export default function Index({ params }: { params: { productId: string } }) {
               <p className={"text-lg font-semibold"}>Colours:</p>
               <div className={"flex flex-row gap-1"}>
                 {product.availableColors.length > 0 &&
-                  product.availableColors.map((color, index) => {
+                  product.availableColors.map((color) => {
                     return (
                       <span
                         className={`w-4 h-4  rounded-full ${color === "black" ? "bg-black" : ""} ${color === "red" ? "bg-primary" : ""} ${color === "blue" ? "bg-blue-400" : ""} ${color === "yellow" ? "bg-yellow-400" : ""}`}
@@ -176,7 +172,9 @@ export default function Index({ params }: { params: { productId: string } }) {
                 </span>
               </div>
               <div>
-                <Button>Buy Now</Button>
+                <Button onClick={()=>{
+                  router.push(`/checkout/${product.id}`)
+                }}>Buy Now</Button>
               </div>
               <span
                 onClick={() => {
@@ -242,7 +240,7 @@ export default function Index({ params }: { params: { productId: string } }) {
         </div>
       </div>
       <div>
-        <RelatedItem />
+        <RelatedItem categoryId={product.categoryId} />
       </div>
     </div>
   );

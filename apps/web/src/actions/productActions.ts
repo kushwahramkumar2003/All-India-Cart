@@ -1,6 +1,5 @@
 "use server";
 import { db } from "@/db";
-import z from "zod";
 
 interface productDetailProp {
   productId: string;
@@ -70,4 +69,13 @@ export async function AddWishListOrRemove({
       message: "Product added to your wishlist!",
     };
   }
+}
+
+export async function getProductsViaCategory(categoryId: string) {
+  const products = await db.product.findMany({
+    where: {
+      categoryId,
+    },
+  });
+  return products;
 }

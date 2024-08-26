@@ -1,15 +1,12 @@
 "use client";
-import { VscLoading } from "react-icons/vsc";
-import { signIn } from "next-auth/react";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 // import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
-import { useToast } from "../../ui/use-toast";
-import { ToastAction } from "../../ui/toast";
+
 import {
   Form,
   FormControl,
@@ -26,9 +23,9 @@ export const SignUpSchema = z.object({
   }),
 });
 function LoginForm() {
-  const router = useRouter();
+  //eslint-disable-next-line
   const [showPassword, setShowPassword] = useState(false);
-  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof SignUpSchema>>({
     resolver: zodResolver(SignUpSchema),
   });
@@ -67,6 +64,7 @@ function LoginForm() {
   //   },
   // });
   //
+  //eslint-disable-next-line
   const onSubmit = async (data: z.infer<typeof SignUpSchema>) => {
     // mutate(data);
     // const res = await signIn("credentials", {

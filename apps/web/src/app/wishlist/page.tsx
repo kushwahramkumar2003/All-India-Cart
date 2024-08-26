@@ -32,7 +32,7 @@ export default async function Index() {
             "grid grid-cols-4 max-lg:grid-cols-3 max-md:grid-cols-4 max-xmd:grid-cols-2 max-sm:grid-cols-1 gap-3"
           }
         >
-          {wishlist.map((item, i) => {
+          {wishlist.map((item) => {
             return (
               <ProductCard
                 name={item.product.name}

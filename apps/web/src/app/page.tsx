@@ -9,7 +9,6 @@ import Featured from "@/components/core/home/Featured";
 import Promise from "@/components/core/home/Promise";
 import { Product } from "@repo/types";
 import { db } from "@/db";
-import { getSession } from "next-auth/react";
 
 export default async function Index() {
   // const user = await getSession();

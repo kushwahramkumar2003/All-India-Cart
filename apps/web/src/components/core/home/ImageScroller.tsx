@@ -3,15 +3,10 @@
 
 import * as React from "react";
 import Autoplay from "embla-carousel-autoplay";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "../../ui/carousel";
+import { Carousel, CarouselContent, CarouselItem } from "../../ui/carousel";
 import Image, { StaticImageData } from "next/image";
 
+//eslint-disable-next-line
 interface ImageScrollerProps {
   images: {}[];
 }

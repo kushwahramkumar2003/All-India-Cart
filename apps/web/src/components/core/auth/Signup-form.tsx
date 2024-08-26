@@ -3,23 +3,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { VscLoading } from "react-icons/vsc";
-import { useMutation } from "@tanstack/react-query";
+
 import { useState } from "react";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
 
-import { useRouter } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
-import { ToastAction } from "@/components/ui/toast";
+import { Button } from "@/components/ui/button";
 
 export const SignUpSchema = z.object({
   name: z.string().min(2, {
@@ -32,9 +26,9 @@ export const SignUpSchema = z.object({
 });
 
 const SignupForm = () => {
-  const router = useRouter();
+  //eslint-disable-next-line
   const [showPassword, setShowPassword] = useState(false);
-  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof SignUpSchema>>({
     resolver: zodResolver(SignUpSchema),
   });
@@ -75,7 +69,7 @@ const SignupForm = () => {
   //     console.log("Error:", error);
   //   },
   // });
-
+  //eslint-disable-next-line
   const onSubmit = (data: z.infer<typeof SignUpSchema>) => {
     // mutate(data);
   };

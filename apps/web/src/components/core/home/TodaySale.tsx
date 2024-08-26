@@ -6,6 +6,7 @@ import { Product } from "@repo/types";
 import { Flipper, Flipped } from "react-flip-toolkit";
 
 const TodaySale = ({ productArr }: { productArr: Product[] }) => {
+  //eslint-disable-next-line
   const [productStateArr, setProductStateArr] = useState<Product[]>(productArr);
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
@@ -44,7 +45,7 @@ const TodaySale = ({ productArr }: { productArr: Product[] }) => {
 
   function getRecentProducts(
     products: Product[],
-    count: number = 5,
+    count: number = 5
   ): Product[] {
     return products
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())

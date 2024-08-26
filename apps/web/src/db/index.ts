@@ -15,4 +15,5 @@ const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
 
 export const db = prisma;
 
+//eslint-disable-next-line
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;

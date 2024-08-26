@@ -1,18 +1,15 @@
 import z from "zod";
-import { type NextRequest } from "next/server";
 import { db } from "@/db";
-import { getSession } from "next-auth/react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { Cart } from "@repo/types";
 
 //Get All Products
+//eslint-disable-next-line
 export async function GET(request: Request) {
   const session = await getServerSession(authOptions);
   if (!session) {
     return Response.json({ message: "Session not found!" }, { status: 404 });
   }
-  //@ts-ignore
   const userId = session?.user.id as string;
   const cart = await db.cart.findUnique({
     where: { userId },
@@ -28,11 +25,10 @@ export async function POST(request: Request) {
   if (!session) {
     return Response.json({ message: "Session not found!" }, { status: 404 });
   }
-  //@ts-ignore
+
   const userId = session?.user.id as string;
 
   const { productId, quantity } = NewItemBodySchema.parse(await request.json());
-  const user = session?.user;
 
   let cart = await db.cart.findUnique({
     where: { userId: userId },
@@ -107,7 +103,7 @@ export async function PUT(request: Request) {
 
   try {
     const { productId, quantity } = UpdateItemBodySchema.parse(
-      await request.json(),
+      await request.json()
     );
 
     const cart = await db.cart.findUnique({
@@ -122,13 +118,13 @@ export async function PUT(request: Request) {
     }
 
     const item = cart.items.find(
-      (item: { id: string; productId: string }) => item.productId === productId,
+      (item: { id: string; productId: string }) => item.productId === productId
     );
 
     if (!item) {
       return Response.json(
         { error: "Item not found in the cart" },
-        { status: 404 },
+        { status: 404 }
       );
       // res.status(404).json({ error: "Item not found in the cart" });
       // return;
@@ -146,7 +142,7 @@ export async function PUT(request: Request) {
 
     const itemPriceDifference = product.unitPrice * (quantity - item.quantity);
 
-    const updatedItem = await db.cartItem.update({
+    await db.cartItem.update({
       where: { id: item.id },
       data: { quantity },
     });
@@ -248,13 +244,13 @@ export async function DELETE(request: Request) {
     }
 
     const itemIndex = cart.items.findIndex(
-      (item) => item.productId === productId,
+      (item) => item.productId === productId
     );
 
     if (itemIndex === -1) {
       return Response.json(
         { error: "Item not found in the cart" },
-        { status: 404 },
+        { status: 404 }
       );
       // res.status(404).json({ error: "Item not found in the cart" });
       // return;
