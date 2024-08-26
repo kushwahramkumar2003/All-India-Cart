@@ -1,5 +1,5 @@
 //eslint-disable-next-line
-const baseUrl = process.env.BASE_URL || "http://localhost:3000/api";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
 
 const config = {
   baseUrl,
