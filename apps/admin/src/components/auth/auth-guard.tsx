@@ -8,7 +8,6 @@ import { useRecoilState } from 'recoil';
 
 import { paths } from '@/paths';
 import { logger } from '@/lib/default-logger';
-import { useUser } from '@/hooks/use-user';
 
 export interface AuthGuardProps {
   children: React.ReactNode;

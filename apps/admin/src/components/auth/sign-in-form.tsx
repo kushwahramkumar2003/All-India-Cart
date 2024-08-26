@@ -4,7 +4,6 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import RouterLink from 'next/link';
 import { useRouter } from 'next/navigation';
-import { login } from '@/services/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
@@ -17,16 +16,11 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Eye as EyeIcon } from '@phosphor-icons/react/dist/ssr/Eye';
 import { EyeSlash as EyeSlashIcon } from '@phosphor-icons/react/dist/ssr/EyeSlash';
-import { Admin, adminAtom, authStateAtom, userAtom } from '@repo/store';
-import { useMutation } from '@tanstack/react-query';
+import { signIn } from 'next-auth/react';
 import { Controller, useForm } from 'react-hook-form';
-import { useRecoilState } from 'recoil';
 import { z as zod } from 'zod';
 
 import { paths } from '@/paths';
-import { authClient } from '@/lib/auth/client';
-import { useUser } from '@/hooks/use-user';
-import { ToastAction } from '@/components/ui/toast';
 import { useToast } from '@/components/ui/use-toast';
 
 const schema = zod.object({
@@ -36,68 +30,55 @@ const schema = zod.object({
 
 type Values = zod.infer<typeof schema>;
 
-const defaultValues = { email: 'info@indianspices.com', password: 'HacksRK2003@' } satisfies Values;
+const defaultValues: Values = { email: '', password: '' };
 
 function SignInForm(): React.JSX.Element {
   const { toast } = useToast();
   const router = useRouter();
-  const [userState, setUserState] = useRecoilState(adminAtom);
-  const [authState, setAuthState] = useRecoilState(authStateAtom);
-  const { checkSession } = useUser();
-
-  const [showPassword, setShowPassword] = React.useState<boolean>();
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (data: zod.infer<typeof schema>) => {
-      return await login(data);
-    },
-    onSuccess: (data) => {
-      const user: Admin = data?.user;
-      console.log('Login successfully ', data);
-      toast({
-        description: 'Login successfully.',
-      });
-      console.log(user);
-      setUserState(user);
-      setAuthState({
-        isLoggedIn: true,
-        user: user || null,
-      });
-      console.log('auth user reached', {
-        isLoggedIn: true,
-        user: user || null,
-      });
-      localStorage.setItem(
-        'authUser',
-        JSON.stringify({
-          isLoggedIn: true,
-          user: user || null,
-        })
-      );
-      router.replace(paths.dashboard.overview);
-    },
-    onError: (error) => {
-      console.log('error ', error);
-      toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: error.message,
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
-      });
-    },
-  });
+  const [showPassword, setShowPassword] = React.useState<boolean>(false);
 
   const {
     control,
     handleSubmit,
     setError,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<Values>({ defaultValues, resolver: zodResolver(schema) });
-  const submitHandler = (data: zod.infer<typeof schema>) => {
-    mutate(data);
-  };
 
-  useEffect(() => {}, []);
+  const submitHandler = async (data: Values) => {
+    try {
+      const res = await signIn('credentials', {
+        username: data.email,
+        password: data.password,
+        redirect: false,
+      });
+
+      if (res?.error) {
+        setError('root', { type: 'manual', message: res.error });
+        toast({
+          title: 'Sign in failed',
+          description: res.error,
+          // status: 'error',
+        });
+        return;
+      }
+
+      if (res?.ok) {
+        toast({
+          title: 'Sign in successful',
+          // status: 'success',
+        });
+        router.push(paths.dashboard.overview);
+      }
+    } catch (error) {
+      console.error('Sign-in error', error);
+      setError('root', { type: 'manual', message: 'An unexpected error occurred' });
+      toast({
+        title: 'Sign in failed',
+        description: 'An unexpected error occurred. Please try again.',
+        // status: 'error',
+      });
+    }
+  };
 
   return (
     <Stack spacing={4}>
@@ -119,7 +100,7 @@ function SignInForm(): React.JSX.Element {
               <FormControl error={Boolean(errors.email)}>
                 <InputLabel>Email address</InputLabel>
                 <OutlinedInput {...field} label="Email address" type="email" />
-                {errors.email ? <FormHelperText>{errors.email.message}</FormHelperText> : null}
+                {errors.email && <FormHelperText>{errors.email.message}</FormHelperText>}
               </FormControl>
             )}
           />
@@ -136,24 +117,20 @@ function SignInForm(): React.JSX.Element {
                       <EyeIcon
                         cursor="pointer"
                         fontSize="var(--icon-fontSize-md)"
-                        onClick={(): void => {
-                          setShowPassword(false);
-                        }}
+                        onClick={() => setShowPassword(false)}
                       />
                     ) : (
                       <EyeSlashIcon
                         cursor="pointer"
                         fontSize="var(--icon-fontSize-md)"
-                        onClick={(): void => {
-                          setShowPassword(true);
-                        }}
+                        onClick={() => setShowPassword(true)}
                       />
                     )
                   }
                   label="Password"
                   type={showPassword ? 'text' : 'password'}
                 />
-                {errors.password ? <FormHelperText>{errors.password.message}</FormHelperText> : null}
+                {errors.password && <FormHelperText>{errors.password.message}</FormHelperText>}
               </FormControl>
             )}
           />
@@ -162,22 +139,12 @@ function SignInForm(): React.JSX.Element {
               Forgot password?
             </Link>
           </div>
-          {errors.root ? <Alert color="error">{errors.root.message}</Alert> : null}
-          <Button disabled={isPending} type="submit" variant="contained">
+          {errors.root && <Alert color="error">{errors.root.message}</Alert>}
+          <Button disabled={isSubmitting} type="submit" variant="contained">
             Sign in
           </Button>
         </Stack>
       </form>
-      {/*<Alert color="warning">*/}
-      {/*  Use{' '}*/}
-      {/*  <Typography component="span" sx={{ fontWeight: 700 }} variant="inherit">*/}
-      {/*    sofia@devias.io*/}
-      {/*  </Typography>{' '}*/}
-      {/*  with password{' '}*/}
-      {/*  <Typography component="span" sx={{ fontWeight: 700 }} variant="inherit">*/}
-      {/*    Secret1*/}
-      {/*  </Typography>*/}
-      {/*</Alert>*/}
     </Stack>
   );
 }

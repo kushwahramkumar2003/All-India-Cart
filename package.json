@@ -2,10 +2,11 @@
   "name": "All india Cart",
   "private": true,
   "scripts": {
-    "build": "turbo build",
+    "build": "npm run generate && turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "generate": "cd packages/db && npm run generate && cd .. && cd ..",
     "api-build": "cd apps/api && npm run build",
     "api-dev": "cd apps/api && npm run dev",
     "api-lint": "cd apps/api && npm run lint",

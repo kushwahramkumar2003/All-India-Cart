@@ -11,11 +11,9 @@ import Typography from '@mui/material/Typography';
 import { GearSix as GearSixIcon } from '@phosphor-icons/react/dist/ssr/GearSix';
 import { SignOut as SignOutIcon } from '@phosphor-icons/react/dist/ssr/SignOut';
 import { User as UserIcon } from '@phosphor-icons/react/dist/ssr/User';
+import { signOut, useSession } from 'next-auth/react';
 
 import { paths } from '@/paths';
-import { authClient } from '@/lib/auth/client';
-import { logger } from '@/lib/default-logger';
-import { useUser } from '@/hooks/use-user';
 
 export interface UserPopoverProps {
   anchorEl: Element | null;
@@ -24,29 +22,19 @@ export interface UserPopoverProps {
 }
 
 export function UserPopover({ anchorEl, onClose, open }: UserPopoverProps): React.JSX.Element {
-  const { checkSession } = useUser();
-
   const router = useRouter();
+  const { data: session } = useSession();
 
   const handleSignOut = React.useCallback(async (): Promise<void> => {
     try {
-      const { error } = await authClient.signOut();
+      await signOut({ callbackUrl: paths.auth.signIn });
 
-      if (error) {
-        logger.error('Sign out error', error);
-        return;
-      }
-
-      // Refresh the auth state
-      await checkSession?.();
-
-      // UserProvider, for this case, will not refresh the router and we need to do it manually
-      router.refresh();
-      // After refresh, AuthGuard will handle the redirect
+      // Redirect to sign-in after sign-out
+      router.push(paths.auth.signIn);
     } catch (err) {
-      logger.error('Sign out error', err);
+      console.error('Sign out error', err);
     }
-  }, [checkSession, router]);
+  }, [router]);
 
   return (
     <Popover
@@ -57,9 +45,9 @@ export function UserPopover({ anchorEl, onClose, open }: UserPopoverProps): Reac
       slotProps={{ paper: { sx: { width: '240px' } } }}
     >
       <Box sx={{ p: '16px 20px ' }}>
-        <Typography variant="subtitle1">Sofia Rivers</Typography>
+        <Typography variant="subtitle1">{session?.user?.name || 'User Name'}</Typography>
         <Typography color="text.secondary" variant="body2">
-          sofia.rivers@devias.io
+          {session?.user?.email || 'user.email@example.com'}
         </Typography>
       </Box>
       <Divider />
